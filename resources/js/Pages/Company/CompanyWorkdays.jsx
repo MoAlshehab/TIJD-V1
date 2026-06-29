@@ -1,9 +1,96 @@
-
+// import { useForm } from '@inertiajs/react';
+// import { useTranslation } from 'react-i18next';
+// import Layout from "@/components/Layout";
+//
+//
+//
+// export default function CompanyWorkdays({ company, workdays = [] }) {
+//     const { t } = useTranslation();
+//     const defaultDays = [
+//         t('Monday'),
+//         t('Tuesday'),
+//         t('Wednesday'),
+//         t('Thursday'),
+//         t('Friday'),
+//         t('Saturday'),
+//         t('Sunday'),
+//     ];
+//
+//     const { data, setData, post, processing } = useForm({
+//         workdays: defaultDays.map((day, i) => {
+//             // Let op: als je backend dagen in het Engels verwacht, pas dan hier de matching aan.
+//             const englishDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+//             const existing = workdays.find(w => w.day === englishDays[i]);
+//             return {
+//                 day,
+//                 start_time: existing?.start_time || '',
+//                 end_time: existing?.end_time || '',
+//             };
+//         }),
+//     });
+//
+//     const handleSubmit = (e) => {
+//         e.preventDefault();
+//         post(`/owner/company/${company.id}/opening-hours`);
+//     };
+//
+//     return (
+//         <div className="p-6 bg-white dark:bg-gray-900 rounded-xl shadow max-h-screen h-screen max-w-xl mx-auto flex flex-col">
+//             <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+//                 {t('Set Opening Hours')}
+//             </h2>
+//             <form onSubmit={handleSubmit} className="flex flex-col flex-grow">
+//                 <div className="flex-grow overflow-y-auto mb-4 pr-2">
+//                     {data.workdays.map((item, index) => (
+//                         <div key={index} className="mb-6">
+//                             <label className="block mb-1 font-medium text-gray-700 dark:text-gray-300">
+//                                 {item.day}
+//                             </label>
+//                             <div className="flex gap-3">
+//                                 <input
+//                                     type="time"
+//                                     value={item.start_time}
+//                                     onChange={(e) => {
+//                                         const updated = [...data.workdays];
+//                                         updated[index].start_time = e.target.value;
+//                                         setData('workdays', updated);
+//                                     }}
+//                                     className="p-2 border border-gray-300 dark:border-gray-600 rounded w-1/2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+//                                 />
+//                                 <input
+//                                     type="time"
+//                                     value={item.end_time}
+//                                     onChange={(e) => {
+//                                         const updated = [...data.workdays];
+//                                         updated[index].end_time = e.target.value;
+//                                         setData('workdays', updated);
+//                                     }}
+//                                     className="p-2 border border-gray-300 dark:border-gray-600 rounded w-1/2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+//                                 />
+//                             </div>
+//                         </div>
+//                     ))}
+//                     <button
+//                         type="submit"
+//                         disabled={processing}
+//                         className="bg-primary text-white px-5 py-3 rounded hover:bg-primary/80 transition"
+//                     >
+//                         {t('Save')}
+//                     </button>
+//
+//
+//                 </div>
+//             </form>
+//         </div>
+//     );
+// }
+// CompanyWorkdays.layout = page => <Layout>{page}</Layout>;
+//
 
 import { useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import Layout from '@/components/Layout';
-import ToggleSwitch from '@/components/ToggleSwitch';
+import ToggleSwitch from '@/Components/ToggleSwitch';
 
 export default function CompanyWorkdays({ company, workdays = [] }) {
     const { t } = useTranslation();
