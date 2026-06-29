@@ -19,7 +19,7 @@ export default defineConfig({
         laravel({
             input: [
                 "resources/sass/app.scss",
-                "resources/js/ineria.jsx",
+                "resources/js/Inertia.jsx",
             ],
             refresh: true,
         }),
