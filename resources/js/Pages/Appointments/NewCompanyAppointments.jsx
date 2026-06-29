@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { router } from '@inertiajs/react';
 import React, { useState } from 'react';
-import FilterDropdown from '@/Components/FilterDropdown';
+import FilterDropdown from '@/components/FilterDropdown';
 
 export default function NewCompanyAppointments({ companyappointments }) {
     const { t } = useTranslation();
