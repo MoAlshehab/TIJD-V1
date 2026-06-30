@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import { route } from 'ziggy-js';
-
+// import { route } from 'ziggy-js';
 const GetStarted = () => {
     const { t } = useTranslation();
 
@@ -28,7 +27,7 @@ const GetStarted = () => {
                 </p>
 
                 <Link
-                    href={route('registration')}
+                  href="/registration"
                     className="inline-block bg-primary hover:bg-primaryDark focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800
                                text-white font-semibold py-3 px-8 rounded-lg transition duration-300"
                     aria-label={t('get_started_aria')}
