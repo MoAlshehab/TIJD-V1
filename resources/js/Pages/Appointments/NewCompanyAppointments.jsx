@@ -184,4 +184,3 @@ export default function NewCompanyAppointments({ companyappointments }) {
         </div>
     );
 }
-//  de naam is verandert
