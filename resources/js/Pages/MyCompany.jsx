@@ -20,10 +20,10 @@ import Company from './Company/Company.jsx';
 import ToggleSwitch from '@/Components/ToggleSwitch';
 import ActionButton from '@/Components/ActionButton';
 import DropdownToggleButton from '@/Components/DropdownToggleButton';
-import NavigationButton from '../components/NavigationButton.jsx';
-import InputField from '@/components/InputField';
-import ImportExportDropdown from '@/components/ImportExportDropdown';
-import FooterLink from '@/components/FooterLink.jsx';
+import NavigationButton from '../Components/NavigationButton.jsx';
+import InputField from '@/Components/InputField';
+import ImportExportDropdown from '@/Components/ImportExportDropdown';
+import FooterLink from '@/Components/FooterLink.jsx';
 
 export default function MyCompany({ companies }) {
     const { t } = useTranslation();
