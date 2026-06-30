@@ -9,7 +9,7 @@ use App\Models\Company;
 use App\Models\CompanyClosedDay;
 use App\Models\Service;
 use App\Models\WorkDay;
-use Illuminate\Support\Str;
+use DragonCode\Support\Facades\Helpers\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
