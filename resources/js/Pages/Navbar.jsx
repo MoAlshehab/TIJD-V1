@@ -14,7 +14,7 @@ import {
     faHome,
     faPlus,
 } from '@fortawesome/free-solid-svg-icons';
-import BackButton from '../components/BackButton.jsx';
+import BackButton from '../Components/BackButton.jsx';
 
 function Navbar() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
