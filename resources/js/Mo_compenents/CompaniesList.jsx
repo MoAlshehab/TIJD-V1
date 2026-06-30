@@ -15,7 +15,7 @@ import LazyLoad from 'react-lazyload';
 import { router, usePage } from '@inertiajs/react';
 import NavigationButton from '@/components/NavigationButton';
 import DropdownToggleButton from '@/components/DropdownToggleButton';
-import CompanyCard from './CompanyCard';
+import CompanyCard from './CompanyCard.jsx';
 import ActionButton from './ActionButton.jsx'; // pas het pad aan indien nodig
 import ConfirmModal from '@/Components/ConfirmModal';
 import { useToast } from '@/Components/Toast/ToastProvider';
