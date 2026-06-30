@@ -1,0 +1,12 @@
+{
+  "resources/js/Inertia.jsx": {
+    "file": "assets/Inertia-129d1790.js",
+    "isEntry": true,
+    "src": "resources/js/Inertia.jsx"
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-954d8296.css",
+    "isEntry": true,
+    "src": "resources/sass/app.scss"
+  }
+}
