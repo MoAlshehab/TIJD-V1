@@ -11,7 +11,7 @@ import {
 import React, { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
 import NavigationButton from '@/components/NavigationButton';
-import DropdownToggleButton from '@/components/DropdownToggleButton';
+import DropdownToggleButton from '@/Components/DropdownToggleButton';
 import useConfirmAction from '@/hooks/useConfirmAction';
 import { useToast } from '@/Components/Toast/ToastProvider';
 import ConfirmModal from '@/Components/ConfirmModal';

@@ -89,7 +89,7 @@
 
 import { useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import Layout from '@/components/Layout';
+import Layout from '@/Components/Layout';
 import ToggleSwitch from '@/Components/ToggleSwitch';
 
 export default function CompanyWorkdays({ company, workdays = [] }) {

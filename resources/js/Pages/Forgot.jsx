@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import InputField from '@/components/InputField';
+import InputField from '@/Components/InputField';
 
 export default function ForgotPassword() {
     const { t } = useTranslation();

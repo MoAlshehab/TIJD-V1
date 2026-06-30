@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import Register from '../../components/Register.jsx';
+import Register from '../../Components/Register.jsx';
 import Forgot from '../Forgot.jsx';
 import { useTranslation } from 'react-i18next';
-import InputField from '@/components/InputField';
+import InputField from '@/Components/InputField';
 
 // TODO : Ik ga dit rename to login page
 export default function Registration() {

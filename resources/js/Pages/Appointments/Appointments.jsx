@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
-import AppointmentsList from '../../components/AppointmentsList.jsx';
+import AppointmentsList from '../../Components/AppointmentsList.jsx';
 import { Link, usePage, router } from '@inertiajs/react';
 
 export default function Appointments(props) {
