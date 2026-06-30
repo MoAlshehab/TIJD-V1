@@ -19,7 +19,8 @@ namespace DragonCode\Support\Http;
 
 use DragonCode\Contracts\Support\Stringable;
 use DragonCode\Support\Concerns\Makeable;
-use DragonCode\Support\Facades\Helpers\Str;
+// use DragonCode\Support\Facades\Helpers\Str;
+use Illuminate\Support\Str;
 
 class BuilderPrepare implements Stringable
 {
