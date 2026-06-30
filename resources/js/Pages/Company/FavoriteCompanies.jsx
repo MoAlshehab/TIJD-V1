@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import NavigationButton from '@/components/NavigationButton';
+import NavigationButton from '@/Components/NavigationButton';
 import DropdownToggleButton from '@/Components/DropdownToggleButton';
 import useConfirmAction from '@/hooks/useConfirmAction';
 import { useToast } from '@/Components/Toast/ToastProvider';
