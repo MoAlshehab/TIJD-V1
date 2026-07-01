@@ -31,7 +31,7 @@ const CompanyCard = ({ company }) => {
                     {company.media.map((media, index) => (
                         <LazyLoad key={index}>
                             <img
-                                src={media.original_url}
+                                src={media.original_url.replace('localhost', '127.0.0.1:8000')}
                                 alt={`Media ${index + 1}`}
                                 className="max-w-full h-auto"
                             />
