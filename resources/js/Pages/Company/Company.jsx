@@ -3,7 +3,7 @@ import CompanyForm from './CompanyForm.jsx';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
-import Button from '../../components/Button.jsx';
+import Button from '../../Components/Button.jsx';
 
 export default function Company() {
     const { t } = useTranslation();

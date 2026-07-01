@@ -5,7 +5,7 @@ import { useToast } from '@/Components/Toast/ToastProvider';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faUserPlus, faCalendarAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
-import ConfirmModal from '@/components/ConfirmModal.jsx';
+import ConfirmModal from '@/Components/ConfirmModal.jsx';
 
 export default function CompanyEmployees(props) {
     const { companyEmployees } = props;

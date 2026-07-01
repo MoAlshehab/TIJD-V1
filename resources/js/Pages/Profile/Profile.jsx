@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import InputField from '@/components/InputField';
+import InputField from '@/Components/InputField';
 import ConfirmModal from '@/Components/ConfirmModal';
 import { useToast } from '@/Components/Toast/ToastProvider';
 

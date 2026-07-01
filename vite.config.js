@@ -5,21 +5,21 @@ import i18n from "laravel-react-i18n/vite";
 import path from "path";
 
 export default defineConfig({
-    server: {
-        host: "0.0.0.0",
-        port: 5173,
-        strictPort: true,
-        hmr: {
-            host: "192.168.2.33",
-            protocol: "ws",
-        },
-    },
+    // server: {
+    //     host: "0.0.0.0",
+    //     port: 5173,
+    //     strictPort: true,
+    //     hmr: {
+    //         host: "192.168.2.30",
+    //         protocol: "ws",
+    //     },
+    // },
 
     plugins: [
         laravel({
             input: [
                 "resources/sass/app.scss",
-                "resources/js/app.js",
+                "resources/js/Inertia.jsx",
             ],
             refresh: true,
         }),

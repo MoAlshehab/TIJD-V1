@@ -10,8 +10,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
-import NavigationButton from '@/components/NavigationButton';
-import DropdownToggleButton from '@/components/DropdownToggleButton';
+import NavigationButton from '@/Components/NavigationButton';
+import DropdownToggleButton from '@/Components/DropdownToggleButton';
 import useConfirmAction from '@/hooks/useConfirmAction';
 import { useToast } from '@/Components/Toast/ToastProvider';
 import ConfirmModal from '@/Components/ConfirmModal';

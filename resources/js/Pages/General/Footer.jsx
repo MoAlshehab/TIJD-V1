@@ -9,7 +9,7 @@ import {
     faBuilding,
     faBookmark,
 } from '@fortawesome/free-solid-svg-icons';
-import FooterLink from '../../components/FooterLink.jsx';
+import FooterLink from '../../Components/FooterLink.jsx';
 
 function Footer() {
     const { companies, auth, pendingAppointmentsCount, appointmentsCount } = usePage().props;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { router, usePage } from '@inertiajs/react';
-import InputField from '@/components/InputField';
+import InputField from '@/Components/InputField';
 import Button from '@/Components/Button';
 import { useToast } from '@/Components/Toast/ToastProvider';
 

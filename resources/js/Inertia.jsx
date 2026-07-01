@@ -1,8 +1,8 @@
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
-import Layout from './components/Layout';
+import Layout from './Components/Layout';
 import './i18n.jsx';
-import { ToastProvider } from './components/Toast/ToastProvider.jsx'; // ✅ Correct pad
+import { ToastProvider } from './Components/Toast/ToastProvider.jsx'; // ✅ Correct pad
 
 createInertiaApp({
     resolve: (name) => {

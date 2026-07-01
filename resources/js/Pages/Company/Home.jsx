@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
-import CompaniesList from '../../components/CompaniesList.jsx';
+import CompaniesList from '../../Components/CompaniesList.jsx';
 import { usePage } from '@inertiajs/react';
-import SearchInput from '@/components/SearchInput';
+import SearchInput from '@/Components/SearchInput';
 
 export default function Home(props) {
     const { companies, favorites } = props;

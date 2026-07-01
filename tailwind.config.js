@@ -1,8 +1,13 @@
 module.exports = {
     darkMode: 'class', // dark mode via class
+    // content: [
+    //     "./resources/**/*.js(x)",
+    // ],
     content: [
-        "./resources/**/*.js(x)",
-    ],
+    "./resources/**/*.blade.php",
+    "./resources/**/*.js",
+    "./resources/**/*.jsx",
+],
     theme: {
         extend: {
             colors: {

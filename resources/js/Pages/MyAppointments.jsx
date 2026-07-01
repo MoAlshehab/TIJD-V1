@@ -5,7 +5,7 @@ import { router, usePage } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 import FilterDropdown from '@/Components/FilterDropdown';
 import { useToast } from '@/Components/Toast/ToastProvider';
-import ConfirmModal from '@/components/ConfirmModal.jsx';
+import ConfirmModal from '@/Components/ConfirmModal.jsx';
 
 export default function MyAppointments() {
     const { t } = useTranslation();
