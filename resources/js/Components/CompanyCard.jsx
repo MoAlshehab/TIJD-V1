@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 
 const CompanyCard = ({ company }) => {
     const { t } = useTranslation();
-
     return (
         <div
             className={`relative bg-light dark:bg-dark-surface p-0 shadow-md rounded-md transition-colors duration-300 w-full max-w-sm mx-auto border-l-4
@@ -46,6 +45,7 @@ const CompanyCard = ({ company }) => {
                     className="max-w-full h-auto"
                 />
             )}
+
 
             {/* Naam */}
             <h2 className="text-xl font-semibold dark:text-dark-text mt-2 px-4">{company.name}</h2>
