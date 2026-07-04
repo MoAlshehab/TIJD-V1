@@ -11,7 +11,7 @@ const GetStarted = () => {
                 {/* Logo */}
                 <Link href="/company/home" className="flex justify-center mb-0 group">
                     <img
-                        src="/storage/images/tijd-logo.png"
+                        src="/logo.png"
                         alt="Tijd Logo"
                         className="w-96 max-w-full h-auto transition-all duration-300 ease-in-out
                    group-hover:scale-105 group-hover:opacity-90"
