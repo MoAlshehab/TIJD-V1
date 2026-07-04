@@ -26,7 +26,7 @@ const CompanyCard = ({ company }) => {
             </div>
 
             {/* Afbeeldingen */}
-            {/* {company.media && company.media.length > 0 ? (
+            {company.media && company.media.length > 0 ? (
                 <div className="flex space-x-2">
                     {company.media.map((media, index) => (
                         <LazyLoad key={index}>
@@ -44,20 +44,7 @@ const CompanyCard = ({ company }) => {
                     alt="Company Image"
                     className="max-w-full h-auto"
                 />
-            )} */}
-
-            {company.media.map((media) => {
-    console.log(media);
-
-    return (
-        <img
-            key={media.id}
-            src={media.original_url}
-            alt=""
-            className="w-full h-auto"
-        />
-    );
-})}
+            )}
 
             {/* Naam */}
             <h2 className="text-xl font-semibold dark:text-dark-text mt-2 px-4">{company.name}</h2>
