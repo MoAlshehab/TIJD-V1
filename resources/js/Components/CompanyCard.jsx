@@ -31,23 +31,20 @@ const CompanyCard = ({ company }) => {
                     {company.media.map((media, index) => (
                         <LazyLoad key={index}>
                             <img
-                                src={media.original_url || media.url}
+                                src={media.original_url}
                                 alt={`Media ${index + 1}`}
-                                className="w-full h-40 object-cover rounded-t-md"
-                                onError={(e) => {
-                                    e.currentTarget.src = '/storage/images/leegbedrijf.jpg';
-                                }}
+                                className="max-w-full h-auto"
                             />
                         </LazyLoad>
                     ))}
                 </div>
             ) : (
                 <img
-                    src="/storage/images/leegbedrijf.jpg"
+                    src={'/storage/images/leegbedrijf.jpg'}
                     alt="Company Image"
-                    className="w-full h-40 object-cover rounded-t-md"
+                    className="max-w-full h-auto"
                 />
-                            )}
+            )}
 
             {/* Naam */}
             <h2 className="text-xl font-semibold dark:text-dark-text mt-2 px-4">{company.name}</h2>
