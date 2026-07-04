@@ -77,8 +77,8 @@ class CompanyController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Company created successfully.');
-    }
+            return redirect()->route('owner.mycompany')->with('success', 'Bedrijf succesvol toegevoegd.');
+        }
 
     // hier zie je de bedrijven in het home pagina
     public function showCompanies()

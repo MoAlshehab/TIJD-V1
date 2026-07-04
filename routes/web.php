@@ -149,7 +149,7 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
     Route::put('/company/{id}', [CompanyController::class, 'update']);
     Route::post('/company/{company}/services', [ServiceController::class, 'store']);
 
-    Route::get('/mycompany', [CompanyController::class, 'ShowMyCompany']);
+    Route::get('/mycompany', [CompanyController::class, 'ShowMyCompany'])->name('owner.mycompany');
     Route::get('/company', [CompanyController::class, 'index']);
     Route::get('/company/{companyId}/company_employees', [FavoriteController::class, 'CompanyEmployees']);
 
