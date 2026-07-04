@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 
 class User extends Authenticatable implements HasMedia
 {
@@ -28,6 +30,17 @@ class User extends Authenticatable implements HasMedia
         'owner',
         'company_id',
     ];
+
+    public function registerMediaConversions(?Media $media = null): void
+{
+    $this
+        ->addMediaConversion('profile')
+        ->width(200)
+        ->height(200)
+        ->format('webp')
+        ->quality(80)
+        ->nonQueued();
+}
 
     /**
      * The attributes that should be hidden for serialization.

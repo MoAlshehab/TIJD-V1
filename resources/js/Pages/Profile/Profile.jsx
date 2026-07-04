@@ -80,19 +80,12 @@ const Profile = ({ auth, profileImageUrl, user: initialUser }) => {
                     {/* Profielfoto */}
                     {auth.user?.company_id || auth.user?.is_owner ? (
                         <div className="relative w-28 h-28">
-                            <img
-                                src={
-                                    user.media?.[0]?.original_url
-                                        ? user.media[0].original_url.replace(
-                                              'localhost',
-                                              '127.0.0.1:8000'
-                                          )
-                                        : '/images/default_profile.jpg'
-                                }
+                           <img
+                                src={user.profile_image}
+                                alt="Profielfoto"
                                 onError={(e) => {
                                     e.currentTarget.src = '/images/default_profile.jpg';
                                 }}
-                                alt="Profielfoto"
                                 className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
                             />
 

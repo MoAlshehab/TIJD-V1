@@ -9,28 +9,41 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    // public function showProfile()
+    // {
+    //     // Haal de ingelogde gebruiker op
+    //     $user = auth()->user();
+
+    //     // Haal alle media uit de 'photo' collectie van de gebruiker
+    //     $files = $user->getMedia('profile_photo');
+    //     // Controleer of er een profielfoto is (bijv. 'profile' collectie) en haal de URL op
+    //     $profileImageUrl = $user->getFirstMediaUrl('profile');
+
+    //     // Zorg ervoor dat als er geen profielfoto is, je een standaard URL meegeeft
+    //     if (! $profileImageUrl) {
+    //         $profileImageUrl = '/storage/images/default_profile.jpg';
+    //     }
+
+    //     // Retourneer de gegevens naar de frontend via Inertia
+    //     return Inertia::render('Profile/Profile', [
+    //         'user' => $user,
+    //         'files' => $files,
+    //         'profileImageUrl' => $profileImageUrl,  // Zorg ervoor dat de URL van de profielfoto wordt doorgegeven
+    //     ]);
+    // }
+
     public function showProfile()
-    {
-        // Haal de ingelogde gebruiker op
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        // Haal alle media uit de 'photo' collectie van de gebruiker
-        $files = $user->getMedia('profile_photo');
-        // Controleer of er een profielfoto is (bijv. 'profile' collectie) en haal de URL op
-        $profileImageUrl = $user->getFirstMediaUrl('profile');
+    $user->profile_image = $user->getFirstMediaUrl('profile', 'profile')
+        ?: '/storage/images/default_profile.jpg';
 
-        // Zorg ervoor dat als er geen profielfoto is, je een standaard URL meegeeft
-        if (! $profileImageUrl) {
-            $profileImageUrl = '/storage/images/default_profile.jpg';
-        }
-
-        // Retourneer de gegevens naar de frontend via Inertia
-        return Inertia::render('Profile/Profile', [
-            'user' => $user,
-            'files' => $files,
-            'profileImageUrl' => $profileImageUrl,  // Zorg ervoor dat de URL van de profielfoto wordt doorgegeven
-        ]);
-    }
+    return Inertia::render('Profile/Profile', [
+        'user' => $user,
+        'profileImageUrl' => $user->profile_image,
+    ]);
+}
 
     public function index()
     {
