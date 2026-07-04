@@ -83,8 +83,19 @@ class CompanyController extends Controller
     // hier zie je de bedrijven in het home pagina
     public function showCompanies()
     {
-        $companies = Company::with('owner', 'employees')->withCount('employees')->get();
-        $files = $companies->flatMap->getMedia('photo');
+$companies = Company::with(['owner', 'employees'])
+    ->withCount('employees')
+    ->get()
+    ->map(function ($company) {
+        $media = $company->getFirstMedia('photo');
+
+        $company->card_image = $media
+            ? $media->getUrl('card')
+            : '/storage/images/leegbedrijf.jpg';
+
+        return $company;
+    });
+            $files = $companies->flatMap->getMedia('photo');
 
         $favorites = Auth::user()?->favorites()->pluck('company_id') ?? collect();
 

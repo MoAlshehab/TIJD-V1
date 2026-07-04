@@ -26,7 +26,7 @@ const CompanyCard = ({ company }) => {
             </div>
 
             {/* Afbeeldingen */}
-            {company.media && company.media.length > 0 ? (
+            {/* {company.media && company.media.length > 0 ? (
                 <div className="flex space-x-2">
                     {company.media.map((media, index) => (
                         <LazyLoad key={index}>
@@ -44,7 +44,19 @@ const CompanyCard = ({ company }) => {
                     alt="Company Image"
                     className="max-w-full h-auto"
                 />
-            )}
+            )} */}
+
+
+            <img
+                src={company.card_image}
+                alt={company.name}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-48 object-cover rounded-t-md"
+                onError={(e) => {
+                    e.currentTarget.src = "/storage/images/leegbedrijf.jpg";
+                }}
+            />
 
             {/* Naam */}
             <h2 className="text-xl font-semibold dark:text-dark-text mt-2 px-4">{company.name}</h2>
