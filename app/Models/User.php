@@ -31,7 +31,7 @@ class User extends Authenticatable implements HasMedia
         'company_id',
     ];
 
-    public function registerMediaConversions(?Media $media = null): void
+public function registerMediaConversions(?Media $media = null): void
 {
     $this
         ->addMediaConversion('profile')
@@ -45,10 +45,16 @@ protected $appends = [
     'profile_image',
 ];
 
+// public function getProfileImageAttribute(): string
+// {
+//     return $this->getFirstMediaUrl('profile_photo')
+//         ?: asset('storage/default_profile.jpg');
+// }
+
 public function getProfileImageAttribute(): string
 {
-    return $this->getFirstMediaUrl('profile_photo')
-        ?: asset('storage/default_profile.jpg');
+    return $this->getFirstMediaUrl('profile_photo', 'profile')
+        ?: asset('storage/default_profile.webp');
 }
     /**
      * The attributes that should be hidden for serialization.
