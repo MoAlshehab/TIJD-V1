@@ -46,7 +46,7 @@ export default function SelectableCard({
             `}
         >
             <div className="flex items-center gap-4">
-                {image && (
+                {/* {image && (
                     <img
                         src={image}
                         onError={(e) => {
@@ -55,8 +55,20 @@ export default function SelectableCard({
                         alt=""
                         className="w-16 h-16 rounded-full object-cover border-2 border-white"
                     />
-                )}
-                <div>
+                )} */}
+
+            <img
+                src={image || '/storage/default_profile.webp'}
+                onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/storage/default_profile.webp';
+                }}
+                alt={title}
+                loading="lazy"
+                decoding="async"
+                className="w-16 h-16 rounded-full object-cover border-2 border-white"
+            />
+                                <div>
                     <div className="font-bold text-lg sm:text-xl">{title}</div>
                     {details.map((line, index) => (
                         <div key={index} className="text-sm sm:text-base opacity-90">
