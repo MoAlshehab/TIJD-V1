@@ -30,32 +30,14 @@ class UserController extends Controller
     //         'files' => $files,
     //         'profileImageUrl' => $profileImageUrl,  // Zorg ervoor dat de URL van de profielfoto wordt doorgegeven
     //     ]);
-//     // }
+    // }
 
-//     public function showProfile()
-// {
-//     $user = auth()->user();
-
-//     $user->profile_image = $user->getFirstMediaUrl('profile', 'profile')
-//         ?: '/images/default_profile.jpg';
-
-//     return Inertia::render('Profile/Profile', [
-//         'user' => $user,
-//         'profileImageUrl' => $user->profile_image,
-//     ]);
-// }
-
-public function showProfile()
+    public function showProfile()
 {
     $user = auth()->user();
 
-<<<<<<< HEAD
-    $user->profile_image = $user->getFirstMediaUrl('profile_photo', 'profile')
-        ?: '/default_profile.jpg';
-=======
     $user->profile_image = $user->getFirstMediaUrl('profile', 'profile')
         ?: '/images/default_profile.jpg';
->>>>>>> parent of 4bcb3d4b (fix profile photo back)
 
     return Inertia::render('Profile/Profile', [
         'user' => $user,
