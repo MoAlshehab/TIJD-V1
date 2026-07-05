@@ -369,11 +369,10 @@ const EmployeeDays = (props) => {
                                 selectedId={selectedEmployee}
                                 onSelect={() => handleEmployeeClick(employee.id, employee.name)}
                                 title={employee.name}
-                                image={employee.profile_image}
-                                // image={employee.media?.[0]?.original_url?.replace(
-                                //     'localhost',
-                                //     '127.0.0.1:8000'
-                                // )}
+                                image={employee.media?.[0]?.original_url?.replace(
+                                    'localhost',
+                                    '127.0.0.1:8000'
+                                )}
                                 lightColor="blue"
                                 darkColor="blue"
                             />
