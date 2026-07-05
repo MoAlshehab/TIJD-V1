@@ -41,7 +41,15 @@ class User extends Authenticatable implements HasMedia
         ->quality(80)
         ->nonQueued();
 }
+protected $appends = [
+    'profile_image',
+];
 
+public function getProfileImageAttribute(): string
+{
+    return $this->getFirstMediaUrl('profile_photo', 'profile')
+        ?: asset('default_profile.jpg');
+}
     /**
      * The attributes that should be hidden for serialization.
      *
