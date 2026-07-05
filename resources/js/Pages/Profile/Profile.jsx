@@ -80,6 +80,7 @@ const Profile = ({ auth, profileImageUrl, user: initialUser }) => {
                     {/* Profielfoto */}
                     {auth.user?.company_id || auth.user?.is_owner ? (
                         <div className="relative w-28 h-28">
+<<<<<<< HEAD
                      <img
                             // src={user.profile_image || '/images/default_profile.jpg'}
                             src={user.profile_image || '/default_profile.jpg'}
@@ -90,6 +91,20 @@ const Profile = ({ auth, profileImageUrl, user: initialUser }) => {
                             }}
                             className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
                         />
+=======
+                          <img
+                                src={user.profile_image}
+                                alt="Profielfoto"
+                                onError={(e) => {
+                                    e.currentTarget.src = '/images/default_profile.jpg';
+                                }}
+                                onError={(e) => {
+                                    e.currentTarget.src = '/images/default_profile.jpg';
+                                }}
+                                alt="Profielfoto"
+                                className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
+                            />
+>>>>>>> parent of 4bcb3d4b (fix profile photo back)
 
                             {/* Upload knop als overlay */}
                             <label
