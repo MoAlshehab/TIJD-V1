@@ -80,11 +80,12 @@ const Profile = ({ auth, profileImageUrl, user: initialUser }) => {
                     {/* Profielfoto */}
                     {auth.user?.company_id || auth.user?.is_owner ? (
                         <div className="relative w-28 h-28">
-                       <img
-                            src={user.profile_image}
+                     <img
+                            src={user.profile_image || '/images/default_profile.jpg'}
                             alt="Profielfoto"
                             onError={(e) => {
-                                e.currentTarget.src = '/storage/images/default_profile.jpg';
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = '/images/default_profile.jpg';
                             }}
                             className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
                         />
