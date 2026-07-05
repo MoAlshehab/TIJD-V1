@@ -101,7 +101,7 @@ $companies = Company::with(['owner', 'employees'])
 
         return Inertia::render('Company/Home', [
             'companies' => $companies,
-            // 'files' => $files,
+            'files' => $files,
             'companiesCount' => $companies->count(),
             'favorites' => $favorites,
         ]);
