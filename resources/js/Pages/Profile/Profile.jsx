@@ -80,16 +80,16 @@ const Profile = ({ auth, profileImageUrl, user: initialUser }) => {
                     {/* Profielfoto */}
                     {auth.user?.company_id || auth.user?.is_owner ? (
                         <div className="relative w-28 h-28">
-                       <img
-                            src={user.profile_image}
-                            alt="Profielfoto"
-                            onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src = '/storage/default_profile.jpg';
-                            }}
-                            className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
-                        />
-
+                    <img
+                        src={user.profile_image}
+                        alt="Profielfoto"
+                        onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/storage/default_profile.jpg';
+                        }}
+                        className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400"
+                    />
+    
                             {/* Upload knop als overlay */}
                             <label
                                 htmlFor="profileImageUpload"

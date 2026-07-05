@@ -44,13 +44,6 @@ public function registerMediaConversions(?Media $media = null): void
 protected $appends = [
     'profile_image',
 ];
-
-// public function getProfileImageAttribute(): string
-// {
-//     return $this->getFirstMediaUrl('profile_photo')
-//         ?: asset('storage/default_profile.jpg');
-// }
-
 public function getProfileImageAttribute(): string
 {
     return $this->getFirstMediaUrl('profile_photo', 'profile')
