@@ -37,7 +37,7 @@ class UserController extends Controller
     $user = auth()->user();
 
     $user->profile_image = $user->getFirstMediaUrl('profile', 'profile')
-        ?: '/images/default_profile.jpg';
+        ?: '/storage/images/default_profile.jpg';
 
     return Inertia::render('Profile/Profile', [
         'user' => $user,
