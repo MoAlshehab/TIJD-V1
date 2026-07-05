@@ -47,8 +47,8 @@ protected $appends = [
 
 public function getProfileImageAttribute(): string
 {
-    return $this->getFirstMediaUrl('profile_photo', 'profile')
-        ?: asset('default_profile.jpg');
+    return $this->getFirstMediaUrl('profile_photo')
+        ?: asset('storage/default_profile.jpg');
 }
     /**
      * The attributes that should be hidden for serialization.
