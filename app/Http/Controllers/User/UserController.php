@@ -45,7 +45,6 @@ class UserController extends Controller
 //     ]);
 // }
 
-
 public function showProfile()
 {
     $user = auth()->user();
