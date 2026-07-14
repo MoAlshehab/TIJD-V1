@@ -99,7 +99,7 @@ public function showProfile()
 
         if ($request->hasFile('profile_image')) {
             $user->clearMediaCollection('profile_photo');
-            $user->addMediaFromRequest('profile_image')->toMediaCollection('profile_photo');
+            $user->addMediaFromRequest('profile_image')->toMediaCollection('profile_photo','public');
         }
 
         $user->save();
