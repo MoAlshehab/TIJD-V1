@@ -72,7 +72,8 @@ class CompanyController extends Controller
         if ($request->file('files')) {
             foreach ($request->file('files') as $file) {
                 // Use the media library of the $company instance
-                $company->addMedia($file)->toMediaCollection('photo');
+                // $company->addMedia($file)->toMediaCollection('photo');
+                $company->addMedia($file)->toMediaCollection('photo', 's3');
 
             }
         }
