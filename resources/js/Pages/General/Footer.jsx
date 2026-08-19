@@ -15,7 +15,7 @@ function Footer() {
     const { companies, auth, pendingAppointmentsCount, appointmentsCount } = usePage().props;
 
     const { t } = useTranslation();
-    console.log('pendingAppointmentsCount:', pendingAppointmentsCount);
+    // console.log('pendingAppointmentsCount:', pendingAppointmentsCount);
 
     return (
         <footer className="bg-gray-800 dark:bg-gray-900 text-white dark:text-gray-200 py-2 fixed bottom-0 left-0 w-full border-t border-gray-700 dark:border-gray-700">
