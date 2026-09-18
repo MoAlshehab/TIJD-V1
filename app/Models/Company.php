@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Company extends Model implements HasMedia
 {
@@ -19,6 +20,25 @@ class Company extends Model implements HasMedia
     ];
 
     protected $fillable = ['name', 'kind', 'email', 'phone', 'address', 'city', 'zip', 'images', 'autaccept'];
+
+      public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('card')
+            ->width(600)
+            ->height(400)
+            ->format('webp')
+            ->quality(75)
+            ->nonQueued();
+
+        $this
+            ->addMediaConversion('thumb')
+            ->width(300)
+            ->height(200)
+            ->format('webp')
+            ->quality(70)
+            ->nonQueued();
+    }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -72,19 +72,30 @@ class CompanyController extends Controller
         if ($request->file('files')) {
             foreach ($request->file('files') as $file) {
                 // Use the media library of the $company instance
-                $company->addMedia($file)->toMediaCollection('photo');
+                $company->addMedia($file)->toMediaCollection('photo', 'public');
 
             }
         }
 
-        return redirect()->back()->with('success', 'Company created successfully.');
-    }
+            return redirect()->route('owner.mycompany')->with('success', 'Bedrijf succesvol toegevoegd.');
+        }
 
     // hier zie je de bedrijven in het home pagina
     public function showCompanies()
     {
-        $companies = Company::with('owner', 'employees')->withCount('employees')->get();
-        $files = $companies->flatMap->getMedia('photo');
+$companies = Company::with(['owner', 'employees'])
+    ->withCount('employees')
+    ->get()
+    ->map(function ($company) {
+        $media = $company->getFirstMedia('photo');
+
+        $company->card_image = $media
+            ? $media->getUrl('card')
+            : '/storage/images/leegbedrijf.jpg';
+
+        return $company;
+    });
+            $files = $companies->flatMap->getMedia('photo');
 
         $favorites = Auth::user()?->favorites()->pluck('company_id') ?? collect();
 

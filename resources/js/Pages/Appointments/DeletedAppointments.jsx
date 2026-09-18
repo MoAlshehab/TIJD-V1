@@ -11,10 +11,10 @@ export default function DeletedAppointments() {
                 {},
                 {
                     onSuccess: () => {
-                        console.log(t('appointment_restored'));
+                        // console.log(t('appointment_restored'));
                     },
                     onError: (errors) => {
-                        console.error(t('error_restoring'), errors);
+                        // console.error(t('error_restoring'), errors);
                     },
                 }
             );
