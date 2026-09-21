@@ -42,7 +42,10 @@ Route::middleware('guest')->group(function () {
 
 });
 
-Auth::routes();
+// Auth::routes();
+Auth::routes([
+    'reset' => false,
+]);
 // Hier kan je zijn als je ingelogd heb
 Route::middleware(['auth'])->group(function () {
 
