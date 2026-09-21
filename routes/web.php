@@ -78,7 +78,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
-    Route::get('/companies/{company}/workdays', [CompanyWorkdayController::class, 'showWorkdays']);
+    Route::get('/companies/{company}/workdays', [CompanyWorkdayController::class, 'showWorkdays'])
+        ->name('companies.workdays');
 
     Route::post('/companies/{id}/open_close', [CompanyController::class, 'toggleOpenClose']);
 

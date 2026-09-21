@@ -55,9 +55,14 @@ class Company extends Model implements HasMedia
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    // public function workdays(): HasMany
+    // {
+    //     return $this->hasMany(Workday::class);
+    // }
+
     public function workdays(): HasMany
     {
-        return $this->hasMany(Workday::class);
+        return $this->hasMany(WorkDay::class, 'company_id');
     }
 
     public function employees()
