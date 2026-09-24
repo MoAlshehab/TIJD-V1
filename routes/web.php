@@ -18,6 +18,7 @@ use App\Http\Controllers\Woocommerce\WoocommerceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\PushSubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,30 @@ Auth::routes([
 ]);
 // Hier kan je zijn als je ingelogd heb
 Route::middleware(['auth'])->group(function () {
+
+
+
+
+//  Voor de meldingen
+
+    Route::get('/push/vapid-key', function () {
+        return response()->json([
+            'publicKey' => config('webpush.vapid.public_key'),
+        ]);
+    });
+
+    Route::post(
+        '/push/subscribe',
+        [PushSubscriptionController::class, 'store']
+    );
+
+    Route::delete(
+        '/push/unsubscribe',
+        [PushSubscriptionController::class, 'destroy']
+    );
+
+
+
 
     Route::get('/companies/{company}/services', [ServiceController::class, 'showCompanyServicesForUser'])
         ->name('companies.services');

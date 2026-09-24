@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from '@inertiajs/react';
+import PushNotificationSettings from '@/Components/PushNotificationSettings';
 
 import {
     faGlobe,
@@ -121,6 +122,8 @@ export default function Settings() {
                             labelOff="☀️"
                         />
                     </div>
+
+                    <div> <PushNotificationSettings /></div>
 
                     {/* Companies Setting */}
                     <div className="flex items-center gap-4">

@@ -1,56 +1,213 @@
-const preLoad = function () {
-    return caches.open("offline").then(function (cache) {
-        // caching index and important routes
-        return cache.addAll(filesToCache);
-    });
-};
+// =============================================
+// TIJD PWA SERVICE WORKER
+// =============================================
 
-self.addEventListener("install", function (event) {
-    event.waitUntil(preLoad());
+const CACHE_NAME = 'tijd-offline-v3';
+const OFFLINE_URL = '/offline.html';
+
+
+// =============================================
+// INSTALL
+// =============================================
+
+self.addEventListener('install', (event) => {
+    console.log('✅ Service Worker installed');
+
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => cache.add(OFFLINE_URL))
+            .catch((error) => {
+                console.warn('Offline pagina kon niet worden gecachet:', error);
+            })
+    );
+
+    self.skipWaiting();
 });
 
-const filesToCache = [
-    '/',
-    '/offline.html'
-];
 
-const checkResponse = function (request) {
-    return new Promise(function (fulfill, reject) {
-        fetch(request).then(function (response) {
-            if (response.status !== 404) {
-                fulfill(response);
-            } else {
-                reject();
-            }
-        }, reject);
-    });
-};
+// =============================================
+// ACTIVATE
+// =============================================
 
-const addToCache = function (request) {
-    return caches.open("offline").then(function (cache) {
-        return fetch(request).then(function (response) {
-            return cache.put(request, response);
-        });
-    });
-};
+self.addEventListener('activate', (event) => {
+    console.log('✅ Service Worker activated');
 
-const returnFromCache = function (request) {
-    return caches.open("offline").then(function (cache) {
-        return cache.match(request).then(function (matching) {
-            if (!matching || matching.status === 404) {
-                return cache.match("offline.html");
-            } else {
-                return matching;
-            }
-        });
-    });
-};
+    event.waitUntil(
+        Promise.all([
+            // Oude caches verwijderen
+            caches.keys().then((cacheNames) => {
+                return Promise.all(
+                    cacheNames
+                        .filter((cacheName) => cacheName !== CACHE_NAME)
+                        .map((cacheName) => caches.delete(cacheName))
+                );
+            }),
 
-self.addEventListener("fetch", function (event) {
-    event.respondWith(checkResponse(event.request).catch(function () {
-        return returnFromCache(event.request);
-    }));
-    if(!event.request.url.startsWith('http')){
-        event.waitUntil(addToCache(event.request));
+            // Nieuwe service worker meteen controle geven
+            self.clients.claim(),
+        ])
+    );
+});
+
+
+// =============================================
+// FETCH / OFFLINE
+// =============================================
+
+self.addEventListener('fetch', (event) => {
+    const request = event.request;
+
+    // Alleen GET requests behandelen
+    if (request.method !== 'GET') {
+        return;
     }
+
+    const url = new URL(request.url);
+
+    // Geen chrome-extension:// etc.
+    if (
+        url.protocol !== 'http:' &&
+        url.protocol !== 'https:'
+    ) {
+        return;
+    }
+
+    // Alleen requests van onze eigen website
+    if (url.origin !== self.location.origin) {
+        return;
+    }
+
+    // Offline fallback alleen bij pagina-navigatie
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request).catch(async () => {
+                const cache = await caches.open(CACHE_NAME);
+
+                return cache.match(OFFLINE_URL);
+            })
+        );
+    }
+});
+
+
+// =============================================
+// PUSH NOTIFICATION
+// =============================================
+
+self.addEventListener('push', (event) => {
+    console.log('🔔 Push ontvangen');
+
+    event.waitUntil(
+        (async () => {
+            let payload = {
+                title: 'Nieuwe melding',
+                body: 'Je hebt een nieuwe melding.',
+                data: {
+                    url: '/',
+                },
+            };
+
+            // Push bevat data
+            if (event.data) {
+                const rawData = event.data.text();
+
+                try {
+                    // Laravel WebPush verstuurt normaal JSON
+                    payload = JSON.parse(rawData);
+
+                    console.log('✅ JSON push payload:', payload);
+                } catch (error) {
+                    // Chrome DevTools "Push" test verstuurt gewone tekst
+                    console.log('ℹ️ Push bevat gewone tekst:', rawData);
+
+                    payload = {
+                        title: 'Test melding',
+                        body: rawData,
+                        data: {
+                            url: '/',
+                        },
+                    };
+                }
+            }
+
+            const title =
+                payload.title ||
+                'Nieuwe melding';
+
+            const options = {
+                body:
+                    payload.body ||
+                    'Je hebt een nieuwe melding.',
+
+                icon:
+                    payload.icon ||
+                    '/icon-192.png',
+
+                badge:
+                    payload.badge ||
+                    '/icon-192.png',
+
+                tag:
+                    payload.tag ||
+                    'tijd-notification',
+
+                data:
+                    payload.data || {
+                        url: '/',
+                    },
+
+                // Als dezelfde tag opnieuw komt:
+                // opnieuw melding geven
+                renotify: true,
+            };
+
+            console.log('🔔 Notification tonen:', title, options);
+
+            await self.registration.showNotification(
+                title,
+                options
+            );
+
+            console.log('✅ Notification succesvol getoond');
+        })()
+    );
+});
+
+
+// =============================================
+// KLIK OP NOTIFICATION
+// =============================================
+
+self.addEventListener('notificationclick', (event) => {
+    console.log('🔔 Notification aangeklikt');
+
+    event.notification.close();
+
+    const targetUrl =
+        event.notification.data?.url || '/';
+
+    event.waitUntil(
+        (async () => {
+            const clientList = await self.clients.matchAll({
+                type: 'window',
+                includeUncontrolled: true,
+            });
+
+            // Als app al open staat
+            for (const client of clientList) {
+                if ('navigate' in client) {
+                    await client.navigate(targetUrl);
+                }
+
+                if ('focus' in client) {
+                    return client.focus();
+                }
+            }
+
+            // App staat niet open
+            if (self.clients.openWindow) {
+                return self.clients.openWindow(targetUrl);
+            }
+        })()
+    );
 });

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\User;
-
+use App\Events\AppointmentCreated;
 use App\Exports\AppointmentsExport;
 use App\Exports\AppointmentsExportToMove;
 use App\Exports\CompanyAppointmentsExport;
@@ -129,7 +129,8 @@ class AppointmentController extends Controller
         $appointment->note = $data['note'] ?? null;
         $appointment->accept = $company->autaccept ? 1 : 0;
         $appointment->save();
-
+        // Pushmelding naar eigenaar triggeren
+        AppointmentCreated::dispatch($appointment);
         // 6️⃣ JUISTE melding teruggeven
         if ($company->autaccept) {
             return redirect()
