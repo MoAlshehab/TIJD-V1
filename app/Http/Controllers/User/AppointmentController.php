@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\User;
+use App\Notifications\AppointmentAcceptedNotification;
 use App\Events\AppointmentCreated;
 use App\Exports\AppointmentsExport;
 use App\Exports\AppointmentsExportToMove;
@@ -346,13 +347,42 @@ class AppointmentController extends Controller
         return redirect()->back()->with('error', 'Je hebt geen toegang tot deze afspraken.');
     }
 
-    public function acceptAppointment(Appointment $appointment)
-    {
-        $appointment->accept = ! $appointment->accept;
-        $appointment->save();
+    // public function acceptAppointment(Appointment $appointment)
+    // {
+    //     $appointment->accept = ! $appointment->accept;
+    //     $appointment->save();
 
-        return redirect()->back();
+    //     return redirect()->back();
+    // }
+
+
+public function acceptAppointment(Appointment $appointment)
+{
+    $appointment->accept = ! $appointment->accept;
+    $appointment->save();
+
+    // Alleen melding sturen wanneer de afspraak wordt geaccepteerd
+    if ($appointment->accept) {
+
+        $appointment->loadMissing([
+            'user',
+            'company',
+            'service',
+        ]);
+
+        $customer = $appointment->user;
+
+        if ($customer) {
+            $customer->notify(
+                new AppointmentAcceptedNotification(
+                    $appointment
+                )
+            );
+        }
     }
+
+    return redirect()->back();
+}
 
     public function appointmentDone(Appointment $appointment)
     {
