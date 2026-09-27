@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Admin\AdminPushNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegistrationController;
@@ -164,7 +164,9 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/users/archived', [UserController::class, 'archived'])->name('admin.users.archived');
     Route::post('/users/{id}/restore', [UserController::class, 'restore']);
     Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete']);
-
+    Route::post('/push/send',[AdminPushNotificationController::class, 'send'])->name('admin.push.send');
+    Route::post('/push/send-owners',[AdminPushNotificationController::class, 'sendToOwners'])->name('admin.push.send.owners');
+    Route::get('/notifications', function () {return Inertia::render('Admin/Notifications');})->name('admin.notifications');
 });
 
 Route::middleware(['owner'])->prefix('owner')->group(function () {

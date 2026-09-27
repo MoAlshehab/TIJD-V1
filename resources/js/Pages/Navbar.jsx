@@ -195,6 +195,9 @@ function Navbar() {
                                     <DropdownLink href="/admin/companies/archive">
                                         {t('archive')}
                                     </DropdownLink>
+                                    <DropdownLink href="/admin/notifications">
+                                        {t('user_notifications')}
+                                    </DropdownLink>
                                 </div>
                             )}
                         </div>
@@ -314,21 +317,29 @@ function Navbar() {
                                 onClick={handleDrawerLinkClick}
                             />
                             <LanguageDropdown />
-                            {!!auth.user?.is_admin && (
-                                <>
-                                    <hr className="border-gray-700" />
-                                    <DrawerLink
-                                        href="/admin/appointments"
-                                        label={t('appointments')}
-                                        onClick={handleDrawerLinkClick}
-                                    />
-                                    <DrawerLink
-                                        href="/admin/users"
-                                        label={t('users')}
-                                        onClick={handleDrawerLinkClick}
-                                    />
-                                </>
-                            )}
+                          {!!auth.user?.is_admin && (
+                        <>
+                            <hr className="border-gray-700" />
+
+                            <DrawerLink
+                                href="/admin/appointments"
+                                label={t('appointments')}
+                                onClick={handleDrawerLinkClick}
+                            />
+
+                            <DrawerLink
+                                href="/admin/users"
+                                label={t('users')}
+                                onClick={handleDrawerLinkClick}
+                            />
+
+                            <DrawerLink
+                                href="/admin/notifications"
+                                label={t('user_notifications')}
+                                onClick={handleDrawerLinkClick}
+                            />
+                        </>
+                    )}
 
                             {!!auth.user && (
                                 <button

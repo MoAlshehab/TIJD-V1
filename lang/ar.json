@@ -43,6 +43,7 @@
     "The response is not a view.": "الاستجابة ليست صفحة عرض.",
     "This password reset link will expire in :count minutes.": "ستنتهي صلاحية رابط استعادة كلمة المرور خلال :count دقيقة.",
     "to": "إلى",
+    "user_notifications": "إشعارات المستخدمين",
     "Toggle navigation": "إظهار/إخفاء القائمة",
     "Too Many Requests": "طلبات كثيرة جدًا",
     "Unauthorized": "غير مصرّح",

@@ -173,7 +173,6 @@ self.addEventListener('push', (event) => {
     );
 });
 
-
 // =============================================
 // KLIK OP NOTIFICATION
 // =============================================
@@ -186,17 +185,26 @@ self.addEventListener('notificationclick', (event) => {
     const targetUrl =
         event.notification.data?.url || '/';
 
+    // Maak altijd een volledige URL van jouw eigen website
+    const fullUrl = new URL(
+        targetUrl,
+        self.location.origin
+    ).href;
+
+    console.log('➡️ Open URL:', fullUrl);
+
     event.waitUntil(
         (async () => {
-            const clientList = await self.clients.matchAll({
-                type: 'window',
-                includeUncontrolled: true,
-            });
+            const clientList =
+                await self.clients.matchAll({
+                    type: 'window',
+                    includeUncontrolled: true,
+                });
 
-            // Als app al open staat
+            // App staat al open
             for (const client of clientList) {
                 if ('navigate' in client) {
-                    await client.navigate(targetUrl);
+                    await client.navigate(fullUrl);
                 }
 
                 if ('focus' in client) {
@@ -206,7 +214,7 @@ self.addEventListener('notificationclick', (event) => {
 
             // App staat niet open
             if (self.clients.openWindow) {
-                return self.clients.openWindow(targetUrl);
+                return self.clients.openWindow(fullUrl);
             }
         })()
     );
