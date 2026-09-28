@@ -109,28 +109,56 @@ export default function EmployeeAppointments() {
                                 </span>
                             )}
                         </label>
+{/* Done + PDF */}
+{appointment.accept && (
+    <div className="flex flex-col gap-2">
 
-                        {/* Done */}
-                        {appointment.accept && (
-                            <label className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="accent-blue-600 w-4 h-4"
-                                    checked={!!appointment.done}
-                                    onChange={() => appointmentDone(appointment.id)}
-                                />
-                                {appointment.done ? (
-                                    <span className="text-green-600 dark:text-green-400 font-medium">
-                                        ✓ {t('Done')}
-                                    </span>
-                                ) : (
-                                    <span className="text-gray-500 dark:text-gray-400">
-                                        {t('Not done')}
-                                    </span>
+        <label className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+            <input
+                type="checkbox"
+                className="accent-blue-600 w-4 h-4"
+                checked={!!appointment.done}
+                onChange={() =>
+                    appointmentDone(appointment.id)
+                }
+            />
+
+            {appointment.done ? (
+                <span className="text-green-600 dark:text-green-400 font-medium">
+                    ✓ {t('Done')}
+                </span>
+            ) : (
+                <span className="text-gray-500 dark:text-gray-400">
+                    {t('Not done')}
+                </span>
+            )}
+        </label>
+
+        {/* PDF alleen tonen als afspraak voltooid is */}
+                            {appointment.done &&
+                                appointment.receipt_pdf_path && (
+                                    <a
+                                        href={`/appointment/${appointment.id}/receipt`}
+                                        className="
+                                            inline-flex
+                                            items-center
+                                            justify-center
+                                            gap-2
+                                            bg-blue-600
+                                            hover:bg-blue-700
+                                            text-white
+                                            px-4
+                                            py-2
+                                            rounded-lg
+                                            transition
+                                        "
+                                    >
+                                        📄 PDF downloaden
+                                    </a>
                                 )}
-                            </label>
-                        )}
-                    </div>
+                        </div>
+                    )}
+                  </div>
                 </div>
             ))}
         </div>

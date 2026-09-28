@@ -143,6 +143,7 @@ Route::middleware(['auth', 'employee'])->group(function () {
 
     Route::get('/company-appointments', [AppointmentController::class, 'ShowCompanyAppointment']);
     Route::post('/appointment/{appointment}/update-details', [AppointmentController::class, 'updateDetails']);
+    Route::get('/appointment/{appointment}/receipt',[AppointmentController::class, 'downloadReceipt'])->name('appointment.receipt');
 
 });
 
@@ -200,11 +201,9 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
 
     Route::patch('/companies/{company}/autaccept', [CompanyController::class, 'toggleAutaccept']);
 
-    Route::get('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'edit'])
-        ->name('company.workdays.edit');
+    Route::get('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'edit'])->name('company.workdays.edit');
 
-    Route::post('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'update'])
-        ->name('company.workdays.update');
+    Route::post('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'update'])->name('company.workdays.update');
 
     Route::get('/deleted-appointments', [AppointmentController::class, 'ShowDeletedAppointments'])->name('appointments.deleted');
     Route::put('/appointments/{id}/restore', [AppointmentController::class, 'RestoreAppointment'])->name('appointments.restore');
@@ -233,6 +232,10 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
         ->name('work_day.update');
     Route::delete('/work-day/{id}', [WorkDayController::class, 'deleteWorkDay'])
         ->name('work_day.delete');
+
+    Route::get('/appointments/pdf',[AppointmentController::class, 'exportOwnerAppointmentsPdf'])->name('owner.appointments.pdf');
+
+
 });
 
 Route::fallback(function () {

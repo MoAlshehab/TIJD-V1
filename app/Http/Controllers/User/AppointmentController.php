@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use App\Notifications\AppointmentAcceptedNotification;
 use App\Events\AppointmentCreated;
 use App\Exports\AppointmentsExport;
@@ -384,13 +386,291 @@ public function acceptAppointment(Appointment $appointment)
     return redirect()->back();
 }
 
-    public function appointmentDone(Appointment $appointment)
-    {
-        $appointment->done = ! $appointment->done;
-        $appointment->save();
+    // public function appointmentDone(Appointment $appointment)
+    // {
+    //     $appointment->done = ! $appointment->done;
+    //     $appointment->save();
 
-        return redirect()->back();
+    //     return redirect()->back();
+    // }
+
+
+    public function appointmentDone(Appointment $appointment)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | Status wijzigen
+    |--------------------------------------------------------------------------
+    */
+    $appointment->done = ! $appointment->done;
+    $appointment->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alleen PDF maken wanneer afspraak VOLTOOID wordt
+    |--------------------------------------------------------------------------
+    */
+    if ($appointment->done) {
+
+        $appointment->loadMissing([
+            'user',
+            'company',
+            'service',
+            'employee',
+        ]);
+
+        /*
+         * Eerst custom_price gebruiken.
+         * Anders normale prijs van de service.
+         */
+        $price =
+            $appointment->custom_price
+            ?? $appointment->service?->price
+            ?? 0;
+
+        /*
+         * PDF maken
+         */
+        $pdf = Pdf::loadView(
+            'pdf.appointment-receipt',
+            [
+                'appointment' => $appointment,
+                'price' => $price,
+            ]
+        );
+
+        /*
+         * Bestandsnaam
+         */
+        $filename =
+            'appointment-' .
+            $appointment->id .
+            '.pdf';
+
+        $path =
+            'appointment-pdfs/' .
+            $filename;
+
+        /*
+         * PDF privé opslaan
+         */
+        Storage::disk('local')->put(
+            $path,
+            $pdf->output()
+        );
+
+        /*
+         * Pad opslaan bij afspraak
+         */
+        $appointment->receipt_pdf_path = $path;
+        $appointment->save();
     }
+
+    return redirect()->back()->with(
+        'success',
+        $appointment->done
+            ? 'Afspraak voltooid en PDF aangemaakt.'
+            : 'Afspraak is niet meer voltooid.'
+    );
+}
+
+
+
+public function downloadReceipt(
+    Appointment $appointment
+) {
+    $user = auth()->user();
+
+    /*
+     * Alleen owner van dit bedrijf
+     * of eventueel admin.
+     */
+    if (
+        $appointment->company->owner_id !== $user->id &&
+        ! $user->is_admin
+    ) {
+        abort(403);
+    }
+
+    if (
+        ! $appointment->receipt_pdf_path ||
+        ! Storage::disk('local')->exists(
+            $appointment->receipt_pdf_path
+        )
+    ) {
+        abort(404, 'PDF niet gevonden.');
+    }
+
+    return Storage::disk('local')->download(
+        $appointment->receipt_pdf_path,
+        'afspraak-' .
+        $appointment->id .
+        '.pdf'
+    );
+}
+
+public function exportOwnerAppointmentsPdf(Request $request)
+{
+    $user = auth()->user();
+
+    // Alleen een eigenaar mag dit rapport downloaden
+    abort_unless($user && $user->owner, 403);
+
+    $period = $request->query('period', 'month');
+
+    $now = now();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Periode bepalen
+    |--------------------------------------------------------------------------
+    */
+    switch ($period) {
+        case 'day':
+            $start = $now->copy()->startOfDay();
+            $end = $now->copy()->endOfDay();
+            $periodLabel = 'Vandaag';
+            break;
+
+        case 'week':
+            $start = $now->copy()->startOfWeek(Carbon::MONDAY);
+            $end = $now->copy()->endOfWeek(Carbon::SUNDAY);
+            $periodLabel = 'Deze week';
+            break;
+
+        case 'last3months':
+            $start = $now->copy()->subMonths(3)->startOfDay();
+            $end = $now->copy()->endOfDay();
+            $periodLabel = 'Afgelopen 3 maanden';
+            break;
+
+        case 'last6months':
+            $start = $now->copy()->subMonths(6)->startOfDay();
+            $end = $now->copy()->endOfDay();
+            $periodLabel = 'Afgelopen 6 maanden';
+            break;
+
+        case 'month':
+        default:
+            $start = $now->copy()->startOfMonth();
+            $end = $now->copy()->endOfMonth();
+            $periodLabel = 'Deze maand';
+            break;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bedrijven van eigenaar
+    |--------------------------------------------------------------------------
+    */
+    $companyIds = Company::where(
+        'owner_id',
+        $user->id
+    )->pluck('id');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Afspraken ophalen
+    |--------------------------------------------------------------------------
+    */
+    $appointments = Appointment::with([
+        'user',
+        'company',
+        'service',
+        'employee',
+    ])
+        ->whereIn('company_id', $companyIds)
+        ->whereBetween('date', [$start, $end])
+        ->orderBy('date')
+        ->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Statistieken
+    |--------------------------------------------------------------------------
+    */
+    $totalAppointments = $appointments->count();
+
+    $acceptedAppointments = $appointments
+        ->filter(fn ($appointment) => (bool) $appointment->accept)
+        ->count();
+
+    $doneAppointments = $appointments
+        ->filter(fn ($appointment) => (bool) $appointment->done)
+        ->count();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Totale waarde van alle afspraken
+    |--------------------------------------------------------------------------
+    |
+    | custom_price heeft voorrang.
+    | Anders wordt service.price gebruikt.
+    */
+    $totalPrice = $appointments->sum(function ($appointment) {
+        return (float) (
+            $appointment->custom_price
+            ?? $appointment->service?->price
+            ?? 0
+        );
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Omzet van alleen voltooide afspraken
+    |--------------------------------------------------------------------------
+    */
+    $completedPrice = $appointments
+        ->filter(fn ($appointment) => (bool) $appointment->done)
+        ->sum(function ($appointment) {
+            return (float) (
+                $appointment->custom_price
+                ?? $appointment->service?->price
+                ?? 0
+            );
+        });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PDF genereren
+    |--------------------------------------------------------------------------
+    */
+    $pdf = Pdf::loadView(
+        'pdf.owner-appointments-overview',
+        [
+            'owner' => $user,
+
+            'appointments' => $appointments,
+
+            'period' => $period,
+            'periodLabel' => $periodLabel,
+
+            'start' => $start,
+            'end' => $end,
+
+            'totalAppointments' => $totalAppointments,
+            'acceptedAppointments' => $acceptedAppointments,
+            'doneAppointments' => $doneAppointments,
+
+            'totalPrice' => $totalPrice,
+            'completedPrice' => $completedPrice,
+        ]
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bestandsnaam
+    |--------------------------------------------------------------------------
+    */
+    $filename =
+        'afspraken-' .
+        $period .
+        '-' .
+        now()->format('Y-m-d') .
+        '.pdf';
+
+    return $pdf->download($filename);
+}
 
     // Hier wordt het verwijderd door de owner/ employee van het bedrijf maar het is niet echt weg
     public function softDelete(Request $request, Appointment $appointment)
