@@ -9,6 +9,7 @@ use App\Http\Controllers\Owner\CompanyController;
 use App\Http\Controllers\Owner\CompanyWorkdayController;
 use App\Http\Controllers\Owner\ServiceController;
 use App\Http\Controllers\Owner\WorkDayController;
+use App\Http\Controllers\Owner\OwnerPushNotificationController;
 use App\Http\Controllers\User\AppointmentController;
 use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\HomeController;
@@ -223,6 +224,8 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
     Route::post('/appointment/{appointment}/delete-with-reason', [AppointmentController::class, 'softDelete']);
 
     Route::get('/employees/{employee}/reserved-times/{date}', [AppointmentController::class, 'getReservedTimes']);
+    Route::get('/notifications',[OwnerPushNotificationController::class, 'index'])->name('owner.notifications');  
+    Route::post('/company/{company}/notifications/send', [OwnerPushNotificationController::class, 'send'])->name('owner.notifications.send');
 
     Route::get('/{employee}/schedule', [WorkDayController::class, 'showSchedule'])
         ->name('employee.schedule');

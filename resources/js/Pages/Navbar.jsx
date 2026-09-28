@@ -171,6 +171,9 @@ function Navbar() {
                                         <FontAwesomeIcon icon={faPlus} className="mr-2" />
                                         {t('aad_company')}
                                     </DropdownLink>
+                                    <DropdownLink href="/owner/notifications">
+                                        {t('customer_notifications')}
+                                    </DropdownLink>
                                 </div>
                             )}
                         </div>
@@ -287,6 +290,11 @@ function Navbar() {
                                         href="/company/new_company"
                                         icon={faPlus}
                                         label={t('aad_company')}
+                                        onClick={handleDrawerLinkClick}
+                                    />
+                                    <DrawerLink
+                                        href="/owner/notifications"
+                                        label={t('customer_notifications')}
                                         onClick={handleDrawerLinkClick}
                                     />
 

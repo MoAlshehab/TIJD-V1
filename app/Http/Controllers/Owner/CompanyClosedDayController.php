@@ -21,7 +21,7 @@ class CompanyClosedDayController extends Controller
             ->orderBy('date')
             ->get(['id', 'date', 'reason']);
 
-        return Inertia::render('owner/ClosedDays', [
+        return Inertia::render('Owner/ClosedDays', [
             'company' => $company,
             'closedDays' => $closedDays,
         ]);
