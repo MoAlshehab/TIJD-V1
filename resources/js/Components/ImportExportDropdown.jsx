@@ -75,74 +75,60 @@ export default function ImportExportDropdown({
     return (
         <div className="flex flex-col gap-4">
 
-            {/* PDF Vandaag */}
-            <button
-                type="button"
-                onClick={() => downloadPdf('day')}
+        {/* PDF Vandaag */}
+            <a
+                href="/owner/appointments/pdf?period=day"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={pdfButtonClass}
             >
-                <span>
-                    📄 {t('PDF Today')}
-                </span>
-
+                <span>📄 {t('PDF Today')}</span>
                 <span>→</span>
-            </button>
+            </a>
 
             {/* PDF Deze week */}
-            <button
-                type="button"
-                onClick={() => downloadPdf('week')}
+            <a
+                href="/owner/appointments/pdf?period=week"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={pdfButtonClass}
             >
-                <span>
-                    📄 {t('PDF This week')}
-                </span>
-
+                <span>📄 {t('PDF This week')}</span>
                 <span>→</span>
-            </button>
+            </a>
 
             {/* PDF Deze maand */}
-            <button
-                type="button"
-                onClick={() => downloadPdf('month')}
+            <a
+                href="/owner/appointments/pdf?period=month"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={pdfButtonClass}
             >
-                <span>
-                    📄 {t('PDF This month')}
-                </span>
-
+                <span>📄 {t('PDF This month')}</span>
                 <span>→</span>
-            </button>
+            </a>
 
             {/* PDF Afgelopen 3 maanden */}
-            <button
-                type="button"
-                onClick={() =>
-                    downloadPdf('last3months')
-                }
+            <a
+                href="/owner/appointments/pdf?period=last3months"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={pdfButtonClass}
             >
-                <span>
-                    📄 {t('PDF Last 3 months')}
-                </span>
-
+                <span>📄 {t('PDF Last 3 months')}</span>
                 <span>→</span>
-            </button>
+            </a>
 
             {/* PDF Afgelopen 6 maanden */}
-            <button
-                type="button"
-                onClick={() =>
-                    downloadPdf('last6months')
-                }
+            <a
+                href="/owner/appointments/pdf?period=last6months"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={pdfButtonClass}
             >
-                <span>
-                    📄 {t('PDF Last 6 months')}
-                </span>
-
+                <span>📄 {t('PDF Last 6 months')}</span>
                 <span>→</span>
-            </button>
+            </a>
 
             {/* Import */}
             <button

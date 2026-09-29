@@ -137,24 +137,26 @@ export default function EmployeeAppointments() {
         {/* PDF alleen tonen als afspraak voltooid is */}
                             {appointment.done &&
                                 appointment.receipt_pdf_path && (
-                                    <a
-                                        href={`/appointment/${appointment.id}/receipt`}
-                                        className="
-                                            inline-flex
-                                            items-center
-                                            justify-center
-                                            gap-2
-                                            bg-blue-600
-                                            hover:bg-blue-700
-                                            text-white
-                                            px-4
-                                            py-2
-                                            rounded-lg
-                                            transition
-                                        "
-                                    >
-                                        📄 PDF downloaden
-                                    </a>
+                              <a
+                                href={`/appointment/${appointment.id}/receipt`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
+                                    inline-flex
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    bg-blue-600
+                                    hover:bg-blue-700
+                                    text-white
+                                    px-4
+                                    py-2
+                                    rounded-lg
+                                    transition
+                                "
+                            >
+                                📄 PDF downloaden
+                            </a>
                                 )}
                         </div>
                     )}
