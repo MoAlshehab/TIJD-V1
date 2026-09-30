@@ -110,23 +110,26 @@ export default function NewCompanyAppointments({ companyappointments }) {
                                     <FontAwesomeIcon icon={faTrash} size="lg" />
                                 </button>
 
-                                <div className="form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-checkbox mr-2"
-                                        checked={!!appointment.accept}
-                                        onChange={() => acceptAppointment(appointment.id)}
-                                    />
-                                    <label className="form-check-label">
-                                        {appointment.accept ? (
-                                            <span className="text-success">✓ {t('Accepted')}</span>
-                                        ) : (
-                                            <span className="text-gray-500 dark:text-gray-400">
-                                                {t('Not Accepted')}
-                                            </span>
-                                        )}
-                                    </label>
-                                </div>
+                            <button
+                                type="button"
+                                onClick={() => acceptAppointment(appointment.id)}
+                                className="
+                                    flex
+                                    items-center
+                                    justify-center
+                                    gap-2
+                                    bg-green-600
+                                    hover:bg-green-700
+                                    text-white
+                                    font-semibold
+                                    px-4
+                                    py-2
+                                    rounded-lg
+                                    transition
+                                "
+                            >
+                                ✓ {t('Accept')}
+                            </button>
 
                                 {appointment.accept && (
                                     <div className="form-check">
