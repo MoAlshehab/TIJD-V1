@@ -39,23 +39,44 @@ class HandleInertiaRequests extends Middleware
             // =====================
             // OWNER
             // =====================
-            if ($user->owner) {
+                if ($user->owner) {
 
-                $companyIds = Company::where('owner_id', $user->id)->pluck('id');
+                    $companyIds = Company::where(
+                        'owner_id',
+                        $user->id
+                    )->pluck('id');
 
-                // New appointments
-                $pendingCount = Appointment::whereIn('company_id', $companyIds)
-                    ->where(function ($q) {
-                        $q->whereNull('accept')
-                        ->orWhere('accept', 0);
-                    })
-                    ->count();
+                    // Nieuwe afspraken:
+                    // accept = 0 of NULL
+                    // done = 0 of NULL
+                    $pendingCount = Appointment::whereIn(
+                        'company_id',
+                        $companyIds
+                    )
+                        ->where(function ($q) {
+                            $q->whereNull('accept')
+                            ->orWhere('accept', 0);
+                        })
+                        ->where(function ($q) {
+                            $q->whereNull('done')
+                            ->orWhere('done', 0);
+                        })
+                        ->count();
 
-                // Geaccepteerde afspraken
-                $appointmentsCount = Appointment::whereIn('company_id', $companyIds)
-                    ->where('accept', 1)
-                    ->count();
-            }
+                    // Geaccepteerd maar nog niet voltooid:
+                    // accept = 1
+                    // done = 0 of NULL
+                    $appointmentsCount = Appointment::whereIn(
+                        'company_id',
+                        $companyIds
+                    )
+                        ->where('accept', 1)
+                        ->where(function ($q) {
+                            $q->whereNull('done')
+                            ->orWhere('done', 0);
+                        })
+                        ->count();
+                }
 
             // =====================
             // EMPLOYEE
@@ -65,15 +86,25 @@ class HandleInertiaRequests extends Middleware
                 // New appointments (only for this employee)
                 $pendingCount = Appointment::where('employee_id', $user->id)
                     ->where(function ($q) {
-                        $q->whereNull('accept')
-                        ->orWhere('accept', 0);
+                        $q->whereNull('accept')->orWhere('accept', 0);
+                    })
+                    ->where(function ($q) {
+                        $q->whereNull('done')->orWhere('done', 0);
                     })
                     ->count();
 
-                // Geaccepteerde afspraken
-                $appointmentsCount = Appointment::where('employee_id', $user->id)
-                    ->where('accept', 1)
-                    ->count();
+                // Accepted but not done (only for this employee)
+              // Geaccepteerd, maar nog NIET voltooid
+                    $appointmentsCount = Appointment::where(
+                        'employee_id',
+                        $user->id
+                    )
+                        ->where('accept', 1)
+                        ->where(function ($q) {
+                            $q->whereNull('done')
+                            ->orWhere('done', 0);
+                        })
+                        ->count();
             }
         }
 
