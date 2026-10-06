@@ -19,7 +19,7 @@ use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
-
+use App\Events\CompanyCreated;
 class CompanyController extends Controller
 {
     public function index()
@@ -67,7 +67,8 @@ class CompanyController extends Controller
         $company->slug = Str::slug($validatedData['name'].'-'.Str::random(6)); // ✅ nieuw toegevoegd
         $company->owner_id = Auth::id();
         $company->save();
-
+        // ✅ Admin pushmelding triggeren
+        CompanyCreated::dispatch($company);
         // Handle media uploads
         if ($request->file('files')) {
             foreach ($request->file('files') as $file) {

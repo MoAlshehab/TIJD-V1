@@ -1,7 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\User;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+use App\Notifications\AppointmentAcceptedNotification;
+use App\Notifications\AppointmentCancelledNotification;
+use App\Events\AppointmentCreated;
 use App\Exports\AppointmentsExport;
 use App\Exports\AppointmentsExportToMove;
 use App\Exports\CompanyAppointmentsExport;
@@ -129,7 +133,8 @@ class AppointmentController extends Controller
         $appointment->note = $data['note'] ?? null;
         $appointment->accept = $company->autaccept ? 1 : 0;
         $appointment->save();
-
+        // Pushmelding naar eigenaar triggeren
+        AppointmentCreated::dispatch($appointment);
         // 6️⃣ JUISTE melding teruggeven
         if ($company->autaccept) {
             return redirect()
@@ -209,59 +214,142 @@ class AppointmentController extends Controller
     // dit werkt goed van alles maar alleen voor de owner niet voor emplyee ook
 
     public function ShowCompanyAppointment()
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        // --- Bepaal aantal nieuwe afspraken (pending) ---
-        if ($user->owner) {
-            // Eigenaar → check alle bedrijven van hem
-            $companies = Company::where('owner_id', $user->id)->pluck('id');
+    /*
+    |--------------------------------------------------------------------------
+    | OWNER
+    |--------------------------------------------------------------------------
+    */
+    if ($user->owner) {
 
-            $pendingAppointmentsCount = Appointment::whereIn('company_id', $companies)
-                ->where('status', 'pending')
-                ->count();
-        } elseif ($user->company_id) {
-            // Werknemer → check nieuwe afspraken voor werknemer
-            $pendingAppointmentsCount = Appointment::where('employee_id', $user->id)
-                ->where('status', 'pending')
-                ->count();
-        } else {
-            $pendingAppointmentsCount = 0;
+        $companies = Company::where(
+            'owner_id',
+            $user->id
+        )->pluck('id');
+
+        if ($companies->isEmpty()) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'Je hebt geen bedrijven.'
+                );
         }
 
-        // --- AFSPRAKEN OPHALEN ---
-        if ($user->owner) {
-            $companies = Company::where('owner_id', $user->id)->pluck('id');
+        $companyAppointments = Appointment::with([
+            'user',
+            'company',
+            'service',
+            'employee',
+        ])
+            ->whereIn(
+                'company_id',
+                $companies
+            )
+            ->where('accept', 1)
+            ->paginate(20);
 
-            if ($companies->isNotEmpty()) {
-                $companyAppointments = Appointment::with(['user', 'company', 'service', 'employee'])
-                    ->whereIn('company_id', $companies)
-                    ->where('accept', 1)
-                    ->paginate(20);
-
-                return Inertia::render('Appointments/CompanyAppointments', [
-                    'companyappointments' => $companyAppointments,
-                    'pendingAppointmentsCount' => $pendingAppointmentsCount,
-                ]);
-            } else {
-                return redirect()->back()->with('error', 'Je hebt geen bedrijven.');
-            }
-
-        } elseif ($user->company_id) {
-            $employeeAppointments = Appointment::with(['user', 'company', 'service', 'employee'])
-                ->where('employee_id', $user->id)
-                ->where('accept', 1)
-                ->paginate(20);
-
-            return Inertia::render('Appointments/CompanyAppointments', [
-                'companyappointments' => $employeeAppointments,
-                'pendingAppointmentsCount' => $pendingAppointmentsCount,
-            ]);
-
-        } else {
-            return redirect()->back()->with('error', 'Je hebt geen toegang tot deze afspraken.');
-        }
+        return Inertia::render(
+            'Appointments/CompanyAppointments',
+            [
+                'companyappointments' =>
+                    $companyAppointments,
+            ]
+        );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EMPLOYEE
+    |--------------------------------------------------------------------------
+    */
+    if ($user->company_id) {
+
+        $employeeAppointments = Appointment::with([
+            'user',
+            'company',
+            'service',
+            'employee',
+        ])
+            ->where(
+                'employee_id',
+                $user->id
+            )
+            ->where('accept', 1)
+            ->paginate(20);
+
+        return Inertia::render(
+            'Appointments/CompanyAppointments',
+            [
+                'companyappointments' =>
+                    $employeeAppointments,
+            ]
+        );
+    }
+
+    return redirect()
+        ->back()
+        ->with(
+            'error',
+            'Je hebt geen toegang tot deze afspraken.'
+        );
+}
+    // public function ShowCompanyAppointment()
+    // {
+    //     $user = auth()->user();
+
+    //     // --- Bepaal aantal nieuwe afspraken (pending) ---
+    //     if ($user->owner) {
+    //         // Eigenaar → check alle bedrijven van hem
+    //         $companies = Company::where('owner_id', $user->id)->pluck('id');
+
+    //         $pendingAppointmentsCount = Appointment::whereIn('company_id', $companies)
+    //             ->where('status', 'pending')
+    //             ->count();
+    //     } elseif ($user->company_id) {
+    //         // Werknemer → check nieuwe afspraken voor werknemer
+    //         $pendingAppointmentsCount = Appointment::where('employee_id', $user->id)
+    //             ->where('status', 'pending')
+    //             ->count();
+    //     } else {
+    //         $pendingAppointmentsCount = 0;
+    //     }
+
+    //     // --- AFSPRAKEN OPHALEN ---
+    //     if ($user->owner) {
+    //         $companies = Company::where('owner_id', $user->id)->pluck('id');
+
+    //         if ($companies->isNotEmpty()) {
+    //             $companyAppointments = Appointment::with(['user', 'company', 'service', 'employee'])
+    //                 ->whereIn('company_id', $companies)
+    //                 ->where('accept', 1)
+    //                 ->paginate(20);
+
+    //             return Inertia::render('Appointments/CompanyAppointments', [
+    //                 'companyappointments' => $companyAppointments,
+    //                 'pendingAppointmentsCount' => $pendingAppointmentsCount,
+    //             ]);
+    //         } else {
+    //             return redirect()->back()->with('error', 'Je hebt geen bedrijven.');
+    //         }
+
+    //     } elseif ($user->company_id) {
+    //         $employeeAppointments = Appointment::with(['user', 'company', 'service', 'employee'])
+    //             ->where('employee_id', $user->id)
+    //             ->where('accept', 1)
+    //             ->paginate(20);
+
+    //         return Inertia::render('Appointments/CompanyAppointments', [
+    //             'companyappointments' => $employeeAppointments,
+    //             'pendingAppointmentsCount' => $pendingAppointmentsCount,
+    //         ]);
+
+    //     } else {
+    //         return redirect()->back()->with('error', 'Je hebt geen toegang tot deze afspraken.');
+    //     }
+    // }
 
     public function ShowDeletedAppointments()
     {
@@ -309,76 +397,569 @@ class AppointmentController extends Controller
     }
 
     public function ShowNewCompanyAppointment()
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        // Als de user een eigenaar is
-        if ($user->owner) {
-            $companies = Company::where('owner_id', $user->id)->pluck('id');
+    /*
+    |--------------------------------------------------------------------------
+    | Eigenaar
+    |--------------------------------------------------------------------------
+    | Eigenaar ziet alleen NIET geaccepteerde afspraken
+    | van al zijn eigen bedrijven.
+    */
+    if ($user->owner) {
 
-            if ($companies->isNotEmpty()) {
-                $companyAppointments = Appointment::with('user', 'company', 'service', 'employee')
-                    ->whereIn('company_id', $companies)
-                    ->whereNull('accept')
-                    ->paginate(20);
+        $companies = Company::where(
+            'owner_id',
+            $user->id
+        )->pluck('id');
 
-                return Inertia::render('Appointments/NewCompanyAppointments', [
-                    'companyappointments' => $companyAppointments,
-                ]);
-            } else {
-                return redirect()->back()->with('error', 'You do not own any companies.');
-            }
-
-            // Als de user een werknemer is (heeft company_id)
-        } elseif ($user->company_id) {
-            $employeeAppointments = Appointment::with('user', 'company', 'service', 'employee')
-                ->where('employee_id', $user->id)
-                ->whereNull('accept')
-                ->paginate(20);
-
-            return Inertia::render('Appointments/NewCompanyAppointments', [
-                'companyappointments' => $employeeAppointments,
-            ]);
+        if ($companies->isEmpty()) {
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    'You do not own any companies.'
+                );
         }
 
-        // Als de gebruiker geen eigenaar of werknemer is
-        return redirect()->back()->with('error', 'Je hebt geen toegang tot deze afspraken.');
+        $companyAppointments = Appointment::with([
+            'user',
+            'company',
+            'service',
+            'employee',
+        ])
+            ->whereIn(
+                'company_id',
+                $companies
+            )
+
+            // Alleen nog niet geaccepteerd
+            ->where(function ($query) {
+                $query
+                    ->where('accept', 0)
+                    ->orWhereNull('accept');
+            })
+
+            ->orderBy('date', 'asc')
+            ->paginate(20);
+
+        return Inertia::render(
+            'Appointments/NewCompanyAppointments',
+            [
+                'companyappointments' =>
+                    $companyAppointments,
+            ]
+        );
     }
 
-    public function acceptAppointment(Appointment $appointment)
-    {
-        $appointment->accept = ! $appointment->accept;
-        $appointment->save();
+    /*
+    |--------------------------------------------------------------------------
+    | Medewerker
+    |--------------------------------------------------------------------------
+    | Medewerker ziet alleen NIET geaccepteerde afspraken
+    | die aan hem zijn gekoppeld.
+    */
+    if ($user->company_id) {
 
-        return redirect()->back();
+        $employeeAppointments = Appointment::with([
+            'user',
+            'company',
+            'service',
+            'employee',
+        ])
+            ->where(
+                'employee_id',
+                $user->id
+            )
+
+            // Alleen nog niet geaccepteerd
+            ->where(function ($query) {
+                $query
+                    ->where('accept', 0)
+                    ->orWhereNull('accept');
+            })
+
+            ->orderBy('date', 'asc')
+            ->paginate(20);
+
+        return Inertia::render(
+            'Appointments/NewCompanyAppointments',
+            [
+                'companyappointments' =>
+                    $employeeAppointments,
+            ]
+        );
     }
 
-    public function appointmentDone(Appointment $appointment)
-    {
-        $appointment->done = ! $appointment->done;
-        $appointment->save();
+    return redirect()
+        ->back()
+        ->with(
+            'error',
+            'Je hebt geen toegang tot deze afspraken.'
+        );
+}
 
-        return redirect()->back();
-    }
+    // public function ShowNewCompanyAppointment()
+    // {
+    //     $user = auth()->user();
 
-    // Hier wordt het verwijderd door de owner/ employee van het bedrijf maar het is niet echt weg
-    public function softDelete(Request $request, Appointment $appointment)
-    {
-        $request->validate([
-            'reason' => 'required|string|max:1000',
+    //     // Als de user een eigenaar is
+    //     if ($user->owner) {
+    //         $companies = Company::where('owner_id', $user->id)->pluck('id');
+
+    //         if ($companies->isNotEmpty()) {
+    //             $companyAppointments = Appointment::with('user', 'company', 'service', 'employee')
+    //                 ->whereIn('company_id', $companies)
+    //                 ->whereNull('accept')
+    //                 ->paginate(20);
+
+    //             return Inertia::render('Appointments/NewCompanyAppointments', [
+    //                 'companyappointments' => $companyAppointments,
+    //             ]);
+    //         } else {
+    //             return redirect()->back()->with('error', 'You do not own any companies.');
+    //         }
+
+    //         // Als de user een werknemer is (heeft company_id)
+    //     } elseif ($user->company_id) {
+    //         $employeeAppointments = Appointment::with('user', 'company', 'service', 'employee')
+    //             ->where('employee_id', $user->id)
+    //             ->whereNull('accept')
+    //             ->paginate(20);
+
+    //         return Inertia::render('Appointments/NewCompanyAppointments', [
+    //             'companyappointments' => $employeeAppointments,
+    //         ]);
+    //     }
+
+    //     // Als de gebruiker geen eigenaar of werknemer is
+    //     return redirect()->back()->with('error', 'Je hebt geen toegang tot deze afspraken.');
+    // }
+
+    // // public function acceptAppointment(Appointment $appointment)
+    // // {
+    // //     $appointment->accept = ! $appointment->accept;
+    // //     $appointment->save();
+
+    // //     return redirect()->back();
+    // // }
+
+
+public function acceptAppointment(Appointment $appointment)
+{
+    $appointment->accept = ! $appointment->accept;
+    $appointment->save();
+
+    // Alleen melding sturen wanneer de afspraak wordt geaccepteerd
+    if ($appointment->accept) {
+
+        $appointment->loadMissing([
+            'user',
+            'company',
+            'service',
         ]);
 
-        // Check of de gebruiker eigenaar is van het bedrijf
-        if ($appointment->company->owner_id !== auth()->id()) {
-            abort(403);
+        $customer = $appointment->user;
+
+        if ($customer) {
+            $customer->notify(
+                new AppointmentAcceptedNotification(
+                    $appointment
+                )
+            );
         }
-
-        $appointment->deleted_reason = $request->reason;
-        $appointment->save();
-        $appointment->delete(); // Soft delete
-
-        return back()->with('message', 'Appointment deleted with reason.');
     }
+
+    return redirect()->back();
+}
+
+    // public function appointmentDone(Appointment $appointment)
+    // {
+    //     $appointment->done = ! $appointment->done;
+    //     $appointment->save();
+
+    //     return redirect()->back();
+    // }
+
+
+    public function appointmentDone(Appointment $appointment)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | Status wijzigen
+    |--------------------------------------------------------------------------
+    */
+    $appointment->done = ! $appointment->done;
+    $appointment->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alleen PDF maken wanneer afspraak VOLTOOID wordt
+    |--------------------------------------------------------------------------
+    */
+    if ($appointment->done) {
+
+        $appointment->loadMissing([
+            'user',
+            'company',
+            'service',
+            'employee',
+        ]);
+
+        /*
+         * Eerst custom_price gebruiken.
+         * Anders normale prijs van de service.
+         */
+        $price =
+            $appointment->custom_price
+            ?? $appointment->service?->price
+            ?? 0;
+
+        /*
+         * PDF maken
+         */
+        $pdf = Pdf::loadView(
+            'pdf.appointment-receipt',
+            [
+                'appointment' => $appointment,
+                'price' => $price,
+            ]
+        );
+
+        /*
+         * Bestandsnaam
+         */
+        $filename =
+            'appointment-' .
+            $appointment->id .
+            '.pdf';
+
+        $path =
+            'appointment-pdfs/' .
+            $filename;
+
+        /*
+         * PDF privé opslaan
+         */
+        Storage::disk('local')->put(
+            $path,
+            $pdf->output()
+        );
+
+        /*
+         * Pad opslaan bij afspraak
+         */
+        $appointment->receipt_pdf_path = $path;
+        $appointment->save();
+    }
+
+    return redirect()->back()->with(
+        'success',
+        $appointment->done
+            ? 'Afspraak voltooid en PDF aangemaakt.'
+            : 'Afspraak is niet meer voltooid.'
+    );
+}
+
+
+
+public function downloadReceipt(
+    Appointment $appointment
+) {
+    $user = auth()->user();
+
+    /*
+     * Alleen owner van dit bedrijf
+     * of eventueel admin.
+     */
+    if (
+        $appointment->company->owner_id !== $user->id &&
+        ! $user->is_admin
+    ) {
+        abort(403);
+    }
+
+    if (
+        ! $appointment->receipt_pdf_path ||
+        ! Storage::disk('local')->exists(
+            $appointment->receipt_pdf_path
+        )
+    ) {
+        abort(404, 'PDF niet gevonden.');
+    }
+
+    return Storage::disk('local')->download(
+        $appointment->receipt_pdf_path,
+        'afspraak-' .
+        $appointment->id .
+        '.pdf'
+    );
+}
+
+public function exportOwnerAppointmentsPdf(Request $request)
+{
+    $user = auth()->user();
+
+    // Alleen een eigenaar mag dit rapport downloaden
+    abort_unless($user && $user->owner, 403);
+
+    $period = $request->query('period', 'month');
+
+    $now = now();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Periode bepalen
+    |--------------------------------------------------------------------------
+    */
+    switch ($period) {
+        case 'day':
+            $start = $now->copy()->startOfDay();
+            $end = $now->copy()->endOfDay();
+            $periodLabel = 'Vandaag';
+            break;
+
+        case 'week':
+            $start = $now->copy()->startOfWeek(Carbon::MONDAY);
+            $end = $now->copy()->endOfWeek(Carbon::SUNDAY);
+            $periodLabel = 'Deze week';
+            break;
+
+        case 'last3months':
+            $start = $now->copy()->subMonths(3)->startOfDay();
+            $end = $now->copy()->endOfDay();
+            $periodLabel = 'Afgelopen 3 maanden';
+            break;
+
+        case 'last6months':
+            $start = $now->copy()->subMonths(6)->startOfDay();
+            $end = $now->copy()->endOfDay();
+            $periodLabel = 'Afgelopen 6 maanden';
+            break;
+
+        case 'month':
+        default:
+            $start = $now->copy()->startOfMonth();
+            $end = $now->copy()->endOfMonth();
+            $periodLabel = 'Deze maand';
+            break;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bedrijven van eigenaar
+    |--------------------------------------------------------------------------
+    */
+    $companyIds = Company::where(
+        'owner_id',
+        $user->id
+    )->pluck('id');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Afspraken ophalen
+    |--------------------------------------------------------------------------
+    */
+    $appointments = Appointment::with([
+        'user',
+        'company',
+        'service',
+        'employee',
+    ])
+        ->whereIn('company_id', $companyIds)
+        ->whereBetween('date', [$start, $end])
+        ->orderBy('date')
+        ->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Statistieken
+    |--------------------------------------------------------------------------
+    */
+    $totalAppointments = $appointments->count();
+
+    $acceptedAppointments = $appointments
+        ->filter(fn ($appointment) => (bool) $appointment->accept)
+        ->count();
+
+    $doneAppointments = $appointments
+        ->filter(fn ($appointment) => (bool) $appointment->done)
+        ->count();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Totale waarde van alle afspraken
+    |--------------------------------------------------------------------------
+    |
+    | custom_price heeft voorrang.
+    | Anders wordt service.price gebruikt.
+    */
+    $totalPrice = $appointments->sum(function ($appointment) {
+        return (float) (
+            $appointment->custom_price
+            ?? $appointment->service?->price
+            ?? 0
+        );
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Omzet van alleen voltooide afspraken
+    |--------------------------------------------------------------------------
+    */
+    $completedPrice = $appointments
+        ->filter(fn ($appointment) => (bool) $appointment->done)
+        ->sum(function ($appointment) {
+            return (float) (
+                $appointment->custom_price
+                ?? $appointment->service?->price
+                ?? 0
+            );
+        });
+
+    /*
+    |--------------------------------------------------------------------------
+    | PDF genereren
+    |--------------------------------------------------------------------------
+    */
+    $pdf = Pdf::loadView(
+        'pdf.owner-appointments-overview',
+        [
+            'owner' => $user,
+
+            'appointments' => $appointments,
+
+            'period' => $period,
+            'periodLabel' => $periodLabel,
+
+            'start' => $start,
+            'end' => $end,
+
+            'totalAppointments' => $totalAppointments,
+            'acceptedAppointments' => $acceptedAppointments,
+            'doneAppointments' => $doneAppointments,
+
+            'totalPrice' => $totalPrice,
+            'completedPrice' => $completedPrice,
+        ]
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bestandsnaam
+    |--------------------------------------------------------------------------
+    */
+    $filename =
+        'afspraken-' .
+        $period .
+        '-' .
+        now()->format('Y-m-d') .
+        '.pdf';
+
+    return $pdf->download($filename);
+}
+
+    // Hier wordt het verwijderd door de owner/ employee van het bedrijf maar het is niet echt weg
+    public function softDelete(
+    Request $request,
+    Appointment $appointment
+) {
+    /*
+    |--------------------------------------------------------------------------
+    | Reden controleren
+    |--------------------------------------------------------------------------
+    */
+    $validated = $request->validate([
+        'reason' => 'required|string|max:1000',
+    ]);
+
+    $user = auth()->user();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relaties laden
+    |--------------------------------------------------------------------------
+    */
+    $appointment->loadMissing([
+        'user',
+        'company',
+        'service',
+        'employee',
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Toegang controleren
+    |--------------------------------------------------------------------------
+    */
+
+    // Eigenaar van het bedrijf
+    $isOwner =
+        $appointment->company?->owner_id === $user->id;
+
+    // Medewerker van deze afspraak
+    $isEmployee =
+        $appointment->employee_id === $user->id;
+
+    abort_unless(
+        $isOwner || $isEmployee,
+        403
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Gegevens bewaren voordat afspraak verwijderd wordt
+    |--------------------------------------------------------------------------
+    */
+    $customer = $appointment->user;
+
+    $companyName =
+        $appointment->company?->name
+        ?? 'het bedrijf';
+
+    $appointmentDate =
+        Carbon::parse(
+            $appointment->date
+        )->format('d-m-Y H:i');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reden opslaan
+    |--------------------------------------------------------------------------
+    */
+    $appointment->deleted_reason =
+        $validated['reason'];
+
+    $appointment->save();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pushmelding naar klant
+    |--------------------------------------------------------------------------
+    */
+    if ($customer) {
+        $customer->notify(
+            new AppointmentCancelledNotification(
+                $companyName,
+                $appointmentDate,
+                $validated['reason']
+            )
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Soft delete
+    |--------------------------------------------------------------------------
+    */
+    $appointment->delete();
+
+    return back()->with(
+        'success',
+        'Afspraak geannuleerd en klant geïnformeerd.'
+    );
+}
 
     // Hier kan ik als admin afspraken verwijdern
     public function deleteAppointment(Appointment $appointment)

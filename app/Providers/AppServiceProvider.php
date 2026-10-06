@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 
+use App\Events\AppointmentCreated;
+use App\Listeners\SendNewAppointmentNotification;
+use Illuminate\Support\Facades\Event;
+use App\Events\CompanyCreated;
+use App\Listeners\SendNewCompanyNotification;
+use App\Listeners\SendNewUserNotificationToAdmins;
+use Illuminate\Auth\Events\Registered;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +30,35 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+     /*
+        |--------------------------------------------------------------------------
+        | Events
+        |--------------------------------------------------------------------------
+        |
+        | Als een nieuwe afspraak wordt gemaakt,
+        | wordt SendNewAppointmentNotification uitgevoerd.
+        |
+        */
+        Event::listen(
+            AppointmentCreated::class,
+            SendNewAppointmentNotification::class
+        );
+
+        Event::listen(
+            CompanyCreated::class,
+            SendNewCompanyNotification::class
+        );
+
+        Event::listen(
+            Registered::class,
+            SendNewUserNotificationToAdmins::class
+        );
+        /*
+        |--------------------------------------------------------------------------
+        | Migration subfolders
+        |--------------------------------------------------------------------------
+        */
         /**
          * 👉 AUTOMATISCH ALLE MIGRATION SUBMAPPEN LADEN
          */

@@ -2,35 +2,110 @@
 
 namespace App\Console\Commands;
 
-namespace App\Console\Commands;
-
-use App\Mail\AppointmentReminderMail;
 use App\Models\Appointment;
+use App\Notifications\AppointmentReminderNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 
 class SendAppointmentReminders extends Command
 {
     protected $signature = 'appointments:send-reminders';
 
-    protected $description = 'Verstuur herinneringsmails voor afspraken over 6 uur';
+    protected $description =
+        'Stuur pushherinneringen 24 uur en 1 uur voor afspraken';
 
-    public function handle()
+    public function handle(): int
     {
         $now = Carbon::now();
-        $reminderTime = $now->copy()->addHours(6);
 
-        $appointments = Appointment::whereNull('deleted_at')
-            ->whereBetween('date', [$reminderTime->copy()->subMinutes(10), $reminderTime->copy()->addMinutes(10)])
-            ->with('user')
+        $appointments = Appointment::with([
+            'user',
+            'company',
+            'service',
+        ])
+            ->where('accept', 1)
+            ->where('done', 0)
+            ->where('date', '>', $now)
+            ->where(
+                'date',
+                '<=',
+                $now->copy()->addHours(24)
+            )
             ->get();
 
         foreach ($appointments as $appointment) {
-            if ($appointment->user && $appointment->user->email) {
-                Mail::to($appointment->user->email)->send(new AppointmentReminderMail($appointment));
-                $this->info('Reminder gestuurd naar: '.$appointment->user->email.' voor afspraak op '.$appointment->date);
+
+            $appointmentDate =
+                Carbon::parse($appointment->date);
+
+            $customer = $appointment->user;
+
+            if (! $customer) {
+                continue;
+            }
+
+            // Gebruiker moet push hebben ingeschakeld
+            if (! $customer->pushSubscriptions()->exists()) {
+                continue;
+            }
+
+            /*
+             * ===========================
+             * 24 UUR HERINNERING
+             * ===========================
+             */
+            if (
+                ! $appointment->reminder_24h_sent &&
+                $appointmentDate->gt(
+                    $now->copy()->addHour()
+                ) &&
+                $appointmentDate->lte(
+                    $now->copy()->addHours(24)
+                )
+            ) {
+                $customer->notify(
+                    new AppointmentReminderNotification(
+                        $appointment,
+                        24
+                    )
+                );
+
+                $appointment->reminder_24h_sent = true;
+                $appointment->save();
+
+                $this->info(
+                    "24h reminder verstuurd voor afspraak {$appointment->id}"
+                );
+            }
+
+            /*
+             * ===========================
+             * 1 UUR HERINNERING
+             * ===========================
+             */
+            if (
+                ! $appointment->reminder_1h_sent &&
+                $appointmentDate->gt($now) &&
+                $appointmentDate->lte(
+                    $now->copy()->addHour()
+                )
+            ) {
+                $customer->notify(
+                    new AppointmentReminderNotification(
+                        $appointment,
+                        1
+                    )
+                );
+
+                $appointment->reminder_1h_sent = true;
+                $appointment->save();
+
+                $this->info(
+                    "1h reminder verstuurd voor afspraak {$appointment->id}"
+                );
             }
         }
+
+        return self::SUCCESS;
     }
 }

@@ -263,6 +263,86 @@
             "install-path": "../aws/aws-sdk-php"
         },
         {
+            "name": "barryvdh/laravel-dompdf",
+            "version": "v3.1.2",
+            "version_normalized": "3.1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-dompdf.git",
+                "reference": "ee3b72b19ccdf57d0243116ecb2b90261344dedc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/ee3b72b19ccdf57d0243116ecb2b90261344dedc",
+                "reference": "ee3b72b19ccdf57d0243116ecb2b90261344dedc",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/dompdf": "^3.0",
+                "illuminate/support": "^9|^10|^11|^12|^13.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.7|^3.0",
+                "orchestra/testbench": "^7|^8|^9.16|^10|^11.0",
+                "phpro/grumphp": "^2.5",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "time": "2026-02-21T08:51:10+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "PDF": "Barryvdh\\DomPDF\\Facade\\Pdf",
+                        "Pdf": "Barryvdh\\DomPDF\\Facade\\Pdf"
+                    },
+                    "providers": [
+                        "Barryvdh\\DomPDF\\ServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\DomPDF\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "A DOMPDF Wrapper for Laravel",
+            "keywords": [
+                "dompdf",
+                "laravel",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/barryvdh/laravel-dompdf/issues",
+                "source": "https://github.com/barryvdh/laravel-dompdf/tree/v3.1.2"
+            },
+            "funding": [
+                {
+                    "url": "https://fruitcake.nl",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../barryvdh/laravel-dompdf"
+        },
+        {
             "name": "brick/math",
             "version": "0.12.3",
             "version_normalized": "0.12.3.0",
@@ -1146,6 +1226,170 @@
                 }
             ],
             "install-path": "../doctrine/lexer"
+        },
+        {
+            "name": "dompdf/dompdf",
+            "version": "v3.1.6",
+            "version_normalized": "3.1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "6d4b4eb8500f7a786da8868ba463a71b725a4005"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/6d4b4eb8500f7a786da8868ba463a71b725a4005",
+                "reference": "6d4b4eb8500f7a786da8868ba463a71b725a4005",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/php-font-lib": "^1.0.0",
+                "dompdf/php-svg-lib": "^1.0.0",
+                "ext-dom": "*",
+                "ext-mbstring": "*",
+                "masterminds/html5": "^2.0",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "ext-json": "*",
+                "ext-zip": "*",
+                "mockery/mockery": "^1.3",
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10 || ^11",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symfony/process": "^4.4 || ^5.4 || ^6.2 || ^7.0"
+            },
+            "suggest": {
+                "ext-gd": "Needed to process images",
+                "ext-gmagick": "Improves image processing performance",
+                "ext-imagick": "Improves image processing performance",
+                "ext-zlib": "Needed for pdf stream compression"
+            },
+            "time": "2026-07-20T12:29:38+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Dompdf\\": "src/"
+                },
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "The Dompdf Community",
+                    "homepage": "https://github.com/dompdf/dompdf/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "support": {
+                "issues": "https://github.com/dompdf/dompdf/issues",
+                "source": "https://github.com/dompdf/dompdf/tree/v3.1.6"
+            },
+            "install-path": "../dompdf/dompdf"
+        },
+        {
+            "name": "dompdf/php-font-lib",
+            "version": "1.0.2",
+            "version_normalized": "1.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-font-lib.git",
+                "reference": "a6e9a688a2a80016ac080b97be73d3e10c444c9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-font-lib/zipball/a6e9a688a2a80016ac080b97be73d3e10c444c9a",
+                "reference": "a6e9a688a2a80016ac080b97be73d3e10c444c9a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10 || ^11 || ^12"
+            },
+            "time": "2026-01-20T14:10:26+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "FontLib\\": "src/FontLib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The FontLib Community",
+                    "homepage": "https://github.com/dompdf/php-font-lib/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "A library to read, parse, export and make subsets of different types of font files.",
+            "homepage": "https://github.com/dompdf/php-font-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-font-lib/issues",
+                "source": "https://github.com/dompdf/php-font-lib/tree/1.0.2"
+            },
+            "install-path": "../dompdf/php-font-lib"
+        },
+        {
+            "name": "dompdf/php-svg-lib",
+            "version": "1.0.2",
+            "version_normalized": "1.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-svg-lib.git",
+                "reference": "8259ffb930817e72b1ff1caef5d226501f3dfeb1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/8259ffb930817e72b1ff1caef5d226501f3dfeb1",
+                "reference": "8259ffb930817e72b1ff1caef5d226501f3dfeb1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0",
+                "sabberworm/php-css-parser": "^8.4 || ^9.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10 || ^11"
+            },
+            "time": "2026-01-02T16:01:13+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Svg\\": "src/Svg"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The SvgLib Community",
+                    "homepage": "https://github.com/dompdf/php-svg-lib/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "A library to read, parse and export to PDF SVG files.",
+            "homepage": "https://github.com/dompdf/php-svg-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-svg-lib/issues",
+                "source": "https://github.com/dompdf/php-svg-lib/tree/1.0.2"
+            },
+            "install-path": "../dompdf/php-svg-lib"
         },
         {
             "name": "dragon-code/contracts",
@@ -3189,6 +3433,67 @@
             "install-path": "../laravel-lang/publisher"
         },
         {
+            "name": "laravel-notification-channels/webpush",
+            "version": "9.0.0",
+            "version_normalized": "9.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-notification-channels/webpush.git",
+                "reference": "9ed37971f230f99e8e45b5ba00282c608a458fb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-notification-channels/webpush/zipball/9ed37971f230f99e8e45b5ba00282c608a458fb8",
+                "reference": "9ed37971f230f99e8e45b5ba00282c608a458fb8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/notifications": "^9.0|^10.0|^11.0",
+                "illuminate/support": "^9.0|^10.0|^11.0",
+                "minishlink/web-push": "^9.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.5|^10.5"
+            },
+            "time": "2024-07-10T15:27:34+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "NotificationChannels\\WebPush\\WebPushServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "NotificationChannels\\WebPush\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cretu Eusebiu",
+                    "email": "me@cretueusebiu.com",
+                    "homepage": "http://cretueusebiu.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Web Push Notifications driver for Laravel.",
+            "homepage": "https://github.com/laravel-notification-channels/webpush",
+            "support": {
+                "issues": "https://github.com/laravel-notification-channels/webpush/issues",
+                "source": "https://github.com/laravel-notification-channels/webpush/tree/9.0.0"
+            },
+            "install-path": "../laravel-notification-channels/webpush"
+        },
+        {
             "name": "laravel/dusk",
             "version": "v8.3.6",
             "version_normalized": "8.3.6.0",
@@ -4738,6 +5043,76 @@
             "install-path": "../markbaker/matrix"
         },
         {
+            "name": "masterminds/html5",
+            "version": "2.11.0",
+            "version_normalized": "2.11.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "a1e7a2f88ee13635d86fc61cfbdf2306a76ddfc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/a1e7a2f88ee13635d86fc61cfbdf2306a76ddfc7",
+                "reference": "a1e7a2f88ee13635d86fc61cfbdf2306a76ddfc7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6 || ^7 || ^8 || ^9 || ^10"
+            },
+            "time": "2026-08-18T06:18:41+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/Masterminds/html5-php/issues",
+                "source": "https://github.com/Masterminds/html5-php/tree/2.11.0"
+            },
+            "install-path": "../masterminds/html5"
+        },
+        {
             "name": "maxmind-db/reader",
             "version": "v1.13.1",
             "version_normalized": "1.13.1.0",
@@ -4857,6 +5232,76 @@
                 "source": "https://github.com/maxmind/web-service-common-php/tree/v0.11.1"
             },
             "install-path": "../maxmind/web-service-common"
+        },
+        {
+            "name": "minishlink/web-push",
+            "version": "v9.0.4",
+            "version_normalized": "9.0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/web-push-libs/web-push-php.git",
+                "reference": "f979f40b0017d2f86d82b9f21edbc515d031cc23"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/web-push-libs/web-push-php/zipball/f979f40b0017d2f86d82b9f21edbc515d031cc23",
+                "reference": "f979f40b0017d2f86d82b9f21edbc515d031cc23",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "guzzlehttp/guzzle": "^7.9.2",
+                "php": ">=8.1",
+                "spomky-labs/base64url": "^2.0.4",
+                "symfony/polyfill-php82": "^v1.31.0",
+                "web-token/jwt-library": "^3.3.0|^4.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^v3.91.3",
+                "phpstan/phpstan": "^2.1.2",
+                "phpunit/phpunit": "^10.5.44|^11.5.6",
+                "symfony/polyfill-iconv": "^1.33"
+            },
+            "suggest": {
+                "ext-bcmath": "Optional for performance.",
+                "ext-gmp": "Optional for performance."
+            },
+            "time": "2025-12-10T14:00:12+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Minishlink\\WebPush\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Louis Lagrange",
+                    "email": "lagrange.louis@gmail.com",
+                    "homepage": "https://github.com/Minishlink"
+                }
+            ],
+            "description": "Web Push library for PHP",
+            "homepage": "https://github.com/web-push-libs/web-push-php",
+            "keywords": [
+                "Push API",
+                "WebPush",
+                "notifications",
+                "push",
+                "web"
+            ],
+            "support": {
+                "issues": "https://github.com/web-push-libs/web-push-php/issues",
+                "source": "https://github.com/web-push-libs/web-push-php/tree/v9.0.4"
+            },
+            "install-path": "../minishlink/web-push"
         },
         {
             "name": "mockery/mockery",
@@ -7310,6 +7755,87 @@
             "install-path": "../ramsey/uuid"
         },
         {
+            "name": "sabberworm/php-css-parser",
+            "version": "v9.5.0",
+            "version_normalized": "9.5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
+                "reference": "f284e63b6e891e0c28631e54ba06c3ed102a9ef3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/f284e63b6e891e0c28631e54ba06c3ed102a9ef3",
+                "reference": "f284e63b6e891e0c28631e54ba06c3ed102a9ef3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": "^7.2.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "1.4.0",
+                "phpstan/extension-installer": "1.4.3",
+                "phpstan/phpstan": "1.12.33 || 2.2.9",
+                "phpstan/phpstan-phpunit": "1.4.2 || 2.0.18",
+                "phpstan/phpstan-strict-rules": "1.6.2 || 2.0.12",
+                "phpunit/phpunit": "8.5.54",
+                "rawr/phpunit-data-provider": "3.3.1",
+                "rector/rector": "1.2.10 || 2.6.2",
+                "rector/type-perfect": "1.0.0 || 2.1.4",
+                "squizlabs/php_codesniffer": "4.0.4"
+            },
+            "suggest": {
+                "ext-mbstring": "for parsing UTF-8 CSS"
+            },
+            "time": "2026-09-20T15:02:00+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "9.6.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "src/Rule/Rule.php",
+                    "src/RuleSet/RuleContainer.php"
+                ],
+                "psr-4": {
+                    "Sabberworm\\CSS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                },
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake.github@qzdesign.co.uk"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "https://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.5.0"
+            },
+            "install-path": "../sabberworm/php-css-parser"
+        },
+        {
             "name": "sebastian/cli-parser",
             "version": "2.0.1",
             "version_normalized": "2.0.1.0",
@@ -9007,6 +9533,187 @@
                 }
             ],
             "install-path": "../spatie/temporary-directory"
+        },
+        {
+            "name": "spomky-labs/base64url",
+            "version": "v2.0.4",
+            "version_normalized": "2.0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Spomky-Labs/base64url.git",
+                "reference": "7752ce931ec285da4ed1f4c5aa27e45e097be61d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Spomky-Labs/base64url/zipball/7752ce931ec285da4ed1f4c5aa27e45e097be61d",
+                "reference": "7752ce931ec285da4ed1f4c5aa27e45e097be61d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.11|^0.12",
+                "phpstan/phpstan-beberlei-assert": "^0.11|^0.12",
+                "phpstan/phpstan-deprecation-rules": "^0.11|^0.12",
+                "phpstan/phpstan-phpunit": "^0.11|^0.12",
+                "phpstan/phpstan-strict-rules": "^0.11|^0.12"
+            },
+            "time": "2020-11-03T09:10:25+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Base64Url\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Florent Morselli",
+                    "homepage": "https://github.com/Spomky-Labs/base64url/contributors"
+                }
+            ],
+            "description": "Base 64 URL Safe Encoding/Decoding PHP Library",
+            "homepage": "https://github.com/Spomky-Labs/base64url",
+            "keywords": [
+                "base64",
+                "rfc4648",
+                "safe",
+                "url"
+            ],
+            "support": {
+                "issues": "https://github.com/Spomky-Labs/base64url/issues",
+                "source": "https://github.com/Spomky-Labs/base64url/tree/v2.0.4"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Spomky",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/FlorentMorselli",
+                    "type": "patreon"
+                }
+            ],
+            "install-path": "../spomky-labs/base64url"
+        },
+        {
+            "name": "spomky-labs/pki-framework",
+            "version": "1.6.3",
+            "version_normalized": "1.6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Spomky-Labs/pki-framework.git",
+                "reference": "792e909d4e387adffe3c4f404451c7d57a3d2022"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/792e909d4e387adffe3c4f404451c7d57a3d2022",
+                "reference": "792e909d4e387adffe3c4f404451c7d57a3d2022",
+                "shasum": ""
+            },
+            "require": {
+                "brick/math": "^0.10|^0.11|^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20|^1.0",
+                "ext-mbstring": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "ekino/phpstan-banned-code": "^1.0|^2.0|^3.0",
+                "ext-gmp": "*",
+                "ext-openssl": "*",
+                "infection/infection": "^0.28|^0.29|^0.31",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpstan/extension-installer": "^1.3|^2.0",
+                "phpstan/phpstan": "^1.8|^2.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0|^2.0",
+                "phpstan/phpstan-phpunit": "^1.1|^2.0",
+                "phpstan/phpstan-strict-rules": "^1.3|^2.0",
+                "phpunit/phpunit": "^10.1|^11.0|^12.0",
+                "rector/rector": "^1.0|^2.0",
+                "roave/security-advisories": "dev-latest",
+                "symfony/string": "^6.4|^7.0|^8.0",
+                "symfony/var-dumper": "^6.4|^7.0|^8.0",
+                "symplify/easy-coding-standard": "^12.0 || ^13.0"
+            },
+            "suggest": {
+                "ext-bcmath": "For better performance (or GMP)",
+                "ext-gmp": "For better performance (or BCMath)",
+                "ext-openssl": "For OpenSSL based cyphering",
+                "ext-sodium": "To verify Ed25519 signatures where the OpenSSL extension has no EdDSA"
+            },
+            "time": "2026-09-12T19:02:49+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "SpomkyLabs\\Pki\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joni Eskelinen",
+                    "email": "jonieske@gmail.com",
+                    "role": "Original developer"
+                },
+                {
+                    "name": "Florent Morselli",
+                    "email": "florent.morselli@spomky-labs.com",
+                    "role": "Spomky-Labs PKI Framework developer"
+                }
+            ],
+            "description": "A PHP framework for managing Public Key Infrastructures. It comprises X.509 public key certificates, attribute certificates, certification requests and certification path validation.",
+            "homepage": "https://github.com/spomky-labs/pki-framework",
+            "keywords": [
+                "DER",
+                "Private Key",
+                "ac",
+                "algorithm identifier",
+                "asn.1",
+                "asn1",
+                "attribute certificate",
+                "certificate",
+                "certification request",
+                "cryptography",
+                "csr",
+                "decrypt",
+                "ec",
+                "encrypt",
+                "pem",
+                "pkcs",
+                "public key",
+                "rsa",
+                "sign",
+                "signature",
+                "verify",
+                "x.509",
+                "x.690",
+                "x509",
+                "x690"
+            ],
+            "support": {
+                "issues": "https://github.com/Spomky-Labs/pki-framework/issues",
+                "source": "https://github.com/Spomky-Labs/pki-framework/tree/1.6.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Spomky",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/FlorentMorselli",
+                    "type": "patreon"
+                }
+            ],
+            "install-path": "../spomky-labs/pki-framework"
         },
         {
             "name": "stevebauman/location",
@@ -10708,6 +11415,89 @@
             "install-path": "../symfony/polyfill-php81"
         },
         {
+            "name": "symfony/polyfill-php82",
+            "version": "v1.38.1",
+            "version_normalized": "1.38.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php82.git",
+                "reference": "002dc0cfe5fd4ed6033d48f27d4f19a486c4b04b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php82/zipball/002dc0cfe5fd4ed6033d48f27d4f19a486c4b04b",
+                "reference": "002dc0cfe5fd4ed6033d48f27d4f19a486c4b04b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "time": "2026-05-26T12:45:58+00:00",
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php82\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.2+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php82/tree/v1.38.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/polyfill-php82"
+        },
+        {
             "name": "symfony/polyfill-php83",
             "version": "v1.33.0",
             "version_normalized": "1.33.0.0",
@@ -12003,6 +12793,99 @@
                 }
             ],
             "install-path": "../voku/portable-ascii"
+        },
+        {
+            "name": "web-token/jwt-library",
+            "version": "4.2.3",
+            "version_normalized": "4.2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/web-token/jwt-library.git",
+                "reference": "db962c3ad8bc91c531a49dd373f0a641fc507bfd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/web-token/jwt-library/zipball/db962c3ad8bc91c531a49dd373f0a641fc507bfd",
+                "reference": "db962c3ad8bc91c531a49dd373f0a641fc507bfd",
+                "shasum": ""
+            },
+            "require": {
+                "brick/math": "^0.12|^0.13|^0.14|^0.15|^0.16|^0.17|^0.18|^0.19|^0.20|^1.0",
+                "php": ">=8.2",
+                "psr/clock": "^1.0",
+                "spomky-labs/pki-framework": "^1.2.1",
+                "symfony/deprecation-contracts": "^2.5|^3.0"
+            },
+            "conflict": {
+                "spomky-labs/jose": "*"
+            },
+            "suggest": {
+                "ext-bcmath": "GMP or BCMath is highly recommended to improve the library performance",
+                "ext-gmp": "GMP or BCMath is highly recommended to improve the library performance",
+                "ext-openssl": "For key management (creation, optimization, etc.) and some algorithms (AES, RSA, ECDSA, etc.)",
+                "ext-sodium": "Sodium is required for OKP key creation, EdDSA signature algorithm and ECDH-ES key encryption with OKP keys",
+                "paragonie/sodium_compat": "Sodium is required for OKP key creation, EdDSA signature algorithm and ECDH-ES key encryption with OKP keys",
+                "spomky-labs/aes-key-wrap": "For all Key Wrapping algorithms (AxxxKW, AxxxGCMKW, PBES2-HSxxx+AyyyKW...)",
+                "symfony/console": "Needed to use console commands",
+                "symfony/http-client": "To enable JKU/X5U support."
+            },
+            "time": "2026-09-12T18:50:35+00:00",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Jose\\Component\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Florent Morselli",
+                    "homepage": "https://github.com/Spomky"
+                },
+                {
+                    "name": "All contributors",
+                    "homepage": "https://github.com/web-token/jwt-framework/contributors"
+                }
+            ],
+            "description": "JWT library",
+            "homepage": "https://github.com/web-token",
+            "keywords": [
+                "JOSE",
+                "JWE",
+                "JWK",
+                "JWKSet",
+                "JWS",
+                "Jot",
+                "RFC7515",
+                "RFC7516",
+                "RFC7517",
+                "RFC7518",
+                "RFC7519",
+                "RFC7520",
+                "bundle",
+                "jwa",
+                "jwt",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/web-token/jwt-library/issues",
+                "source": "https://github.com/web-token/jwt-library/tree/4.2.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Spomky",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/FlorentMorselli",
+                    "type": "patreon"
+                }
+            ],
+            "install-path": "../web-token/jwt-library"
         }
     ],
     "dev": true,

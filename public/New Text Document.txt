@@ -1,0 +1,204 @@
+// =============================================
+// TIJD PWA Service Worker
+// =============================================
+
+const CACHE_NAME = 'tijd-offline-v2';
+const OFFLINE_URL = '/offline.html';
+
+
+// =============================================
+// INSTALL
+// =============================================
+
+self.addEventListener('install', (event) => {
+    console.log('✅ Service Worker installed');
+
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                return cache.add(OFFLINE_URL);
+            })
+            .catch((error) => {
+                console.warn(
+                    'Offline pagina kon niet worden gecachet:',
+                    error
+                );
+            })
+    );
+
+    self.skipWaiting();
+});
+
+
+// =============================================
+// ACTIVATE
+// =============================================
+
+self.addEventListener('activate', (event) => {
+    console.log('✅ Service Worker activated');
+
+    event.waitUntil(
+        Promise.all([
+            caches.keys().then((cacheNames) => {
+                return Promise.all(
+                    cacheNames.map((cacheName) => {
+                        if (cacheName !== CACHE_NAME) {
+                            return caches.delete(cacheName);
+                        }
+                    })
+                );
+            }),
+
+            self.clients.claim(),
+        ])
+    );
+});
+
+
+// =============================================
+// FETCH / OFFLINE
+// =============================================
+
+self.addEventListener('fetch', (event) => {
+    const request = event.request;
+
+    // Alleen GET requests
+    if (request.method !== 'GET') {
+        return;
+    }
+
+    const url = new URL(request.url);
+
+    // Geen chrome-extension:// of andere protocollen
+    if (
+        url.protocol !== 'http:' &&
+        url.protocol !== 'https:'
+    ) {
+        return;
+    }
+
+    // Alleen requests van deze app
+    if (url.origin !== self.location.origin) {
+        return;
+    }
+
+    // Alleen navigatie requests afhandelen
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request)
+                .catch(async () => {
+                    const cache =
+                        await caches.open(CACHE_NAME);
+
+                    return cache.match(OFFLINE_URL);
+                })
+        );
+    }
+});
+
+
+// =============================================
+// PUSH NOTIFICATION
+// =============================================
+
+self.addEventListener('push', (event) => {
+    console.log('🔔 Push ontvangen');
+
+    let payload = {
+        title: 'Nieuwe melding',
+        body: 'Je hebt een nieuwe melding.',
+        data: {
+            url: '/',
+        },
+    };
+
+    if (event.data) {
+        try {
+            payload = event.data.json();
+
+            console.log(
+                'Push payload:',
+                payload
+            );
+        } catch (error) {
+            console.error(
+                'Push JSON fout:',
+                error
+            );
+
+            payload.body = event.data.text();
+        }
+    }
+
+    const title =
+        payload.title ??
+        'Nieuwe melding';
+
+    const options = {
+        body:
+            payload.body ??
+            'Je hebt een nieuwe melding.',
+
+        icon:
+            payload.icon ??
+            '/favicon.ico',
+
+        badge:
+            payload.badge ??
+            '/favicon.ico',
+
+        tag:
+            payload.tag ??
+            'tijd-notification',
+
+        data:
+            payload.data ?? {
+                url: '/',
+            },
+
+        renotify: true,
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(
+            title,
+            options
+        )
+    );
+});
+
+
+// =============================================
+// KLIK OP NOTIFICATION
+// =============================================
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+
+    const url =
+        event.notification.data?.url ?? '/';
+
+    event.waitUntil(
+        self.clients
+            .matchAll({
+                type: 'window',
+                includeUncontrolled: true,
+            })
+            .then((clientList) => {
+
+                for (const client of clientList) {
+                    if ('navigate' in client) {
+                        client.navigate(url);
+                    }
+
+                    if ('focus' in client) {
+                        return client.focus();
+                    }
+                }
+
+                if (self.clients.openWindow) {
+                    return self.clients.openWindow(url);
+                }
+            })
+    );
+});

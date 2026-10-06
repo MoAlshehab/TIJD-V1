@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Admin\AdminPushNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegistrationController;
@@ -9,6 +9,7 @@ use App\Http\Controllers\Owner\CompanyController;
 use App\Http\Controllers\Owner\CompanyWorkdayController;
 use App\Http\Controllers\Owner\ServiceController;
 use App\Http\Controllers\Owner\WorkDayController;
+use App\Http\Controllers\Owner\OwnerPushNotificationController;
 use App\Http\Controllers\User\AppointmentController;
 use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\HomeController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Woocommerce\WoocommerceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\PushSubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +50,30 @@ Auth::routes([
 ]);
 // Hier kan je zijn als je ingelogd heb
 Route::middleware(['auth'])->group(function () {
+
+
+
+
+//  Voor de meldingen
+
+    Route::get('/push/vapid-key', function () {
+        return response()->json([
+            'publicKey' => config('webpush.vapid.public_key'),
+        ]);
+    });
+
+    Route::post(
+        '/push/subscribe',
+        [PushSubscriptionController::class, 'store']
+    );
+
+    Route::delete(
+        '/push/unsubscribe',
+        [PushSubscriptionController::class, 'destroy']
+    );
+
+
+
 
     Route::get('/companies/{company}/services', [ServiceController::class, 'showCompanyServicesForUser'])
         ->name('companies.services');
@@ -117,6 +143,7 @@ Route::middleware(['auth', 'employee'])->group(function () {
 
     Route::get('/company-appointments', [AppointmentController::class, 'ShowCompanyAppointment']);
     Route::post('/appointment/{appointment}/update-details', [AppointmentController::class, 'updateDetails']);
+    Route::get('/appointment/{appointment}/receipt',[AppointmentController::class, 'downloadReceipt'])->name('appointment.receipt');
 
 });
 
@@ -139,11 +166,13 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/users/archived', [UserController::class, 'archived'])->name('admin.users.archived');
     Route::post('/users/{id}/restore', [UserController::class, 'restore']);
     Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete']);
-
+    Route::post('/push/send',[AdminPushNotificationController::class, 'send'])->name('admin.push.send');
+    Route::post('/push/send-owners',[AdminPushNotificationController::class, 'sendToOwners'])->name('admin.push.send.owners');
+    Route::get('/notifications', function () {return Inertia::render('Admin/Notifications');})->name('admin.notifications');
 });
 
 Route::middleware(['owner'])->prefix('owner')->group(function () {
-
+    Route::get('/new-company-appointments', [AppointmentController::class, 'ShowNewCompanyAppointment'])->name('owner.new-appointments');
     Route::post('/companies', [CompanyController::class, 'store']);
     Route::delete('/company/{company}', [CompanyController::class, 'destroy']);
     Route::post('/appointment/{id}/status', [AppointmentController::class, 'updateStatus']);
@@ -172,11 +201,9 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
 
     Route::patch('/companies/{company}/autaccept', [CompanyController::class, 'toggleAutaccept']);
 
-    Route::get('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'edit'])
-        ->name('company.workdays.edit');
+    Route::get('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'edit'])->name('company.workdays.edit');
 
-    Route::post('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'update'])
-        ->name('company.workdays.update');
+    Route::post('/company/{company}/opening-hours', [CompanyWorkdayController::class, 'update'])->name('company.workdays.update');
 
     Route::get('/deleted-appointments', [AppointmentController::class, 'ShowDeletedAppointments'])->name('appointments.deleted');
     Route::put('/appointments/{id}/restore', [AppointmentController::class, 'RestoreAppointment'])->name('appointments.restore');
@@ -196,6 +223,8 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
     Route::post('/appointment/{appointment}/delete-with-reason', [AppointmentController::class, 'softDelete']);
 
     Route::get('/employees/{employee}/reserved-times/{date}', [AppointmentController::class, 'getReservedTimes']);
+    Route::get('/notifications',[OwnerPushNotificationController::class, 'index'])->name('owner.notifications');  
+    Route::post('/company/{company}/notifications/send', [OwnerPushNotificationController::class, 'send'])->name('owner.notifications.send');
 
     Route::get('/{employee}/schedule', [WorkDayController::class, 'showSchedule'])
         ->name('employee.schedule');
@@ -203,11 +232,25 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
         ->name('work_day.update');
     Route::delete('/work-day/{id}', [WorkDayController::class, 'deleteWorkDay'])
         ->name('work_day.delete');
+
+    Route::get('/appointments/pdf',[AppointmentController::class, 'exportOwnerAppointmentsPdf'])->name('owner.appointments.pdf');
+
+
 });
 
 Route::fallback(function () {
     if (Auth::check()) {
-        return redirect('/company/home');
+        $user = Auth::user();
+
+        if ($user->owner) {
+            return redirect()->route('owner.new-appointments');
+        }
+
+        if ($user->company_id) {
+            return redirect('/employee/appointments');
+        }
+
+        return redirect('/company/favorites');
     }
 
     return Inertia::render('Errors/NotFound');

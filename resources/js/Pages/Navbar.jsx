@@ -171,6 +171,9 @@ function Navbar() {
                                         <FontAwesomeIcon icon={faPlus} className="mr-2" />
                                         {t('aad_company')}
                                     </DropdownLink>
+                                    <DropdownLink href="/owner/notifications">
+                                        {t('customer_notifications')}
+                                    </DropdownLink>
                                 </div>
                             )}
                         </div>
@@ -194,6 +197,9 @@ function Navbar() {
                                     <DropdownLink href="/admin/users">{t('users')}</DropdownLink>
                                     <DropdownLink href="/admin/companies/archive">
                                         {t('archive')}
+                                    </DropdownLink>
+                                    <DropdownLink href="/admin/notifications">
+                                        {t('user_notifications')}
                                     </DropdownLink>
                                 </div>
                             )}
@@ -286,6 +292,11 @@ function Navbar() {
                                         label={t('aad_company')}
                                         onClick={handleDrawerLinkClick}
                                     />
+                                    <DrawerLink
+                                        href="/owner/notifications"
+                                        label={t('customer_notifications')}
+                                        onClick={handleDrawerLinkClick}
+                                    />
 
                                     <hr className="border-gray-700" />
                                 </>
@@ -314,21 +325,29 @@ function Navbar() {
                                 onClick={handleDrawerLinkClick}
                             />
                             <LanguageDropdown />
-                            {!!auth.user?.is_admin && (
-                                <>
-                                    <hr className="border-gray-700" />
-                                    <DrawerLink
-                                        href="/admin/appointments"
-                                        label={t('appointments')}
-                                        onClick={handleDrawerLinkClick}
-                                    />
-                                    <DrawerLink
-                                        href="/admin/users"
-                                        label={t('users')}
-                                        onClick={handleDrawerLinkClick}
-                                    />
-                                </>
-                            )}
+                          {!!auth.user?.is_admin && (
+                        <>
+                            <hr className="border-gray-700" />
+
+                            <DrawerLink
+                                href="/admin/appointments"
+                                label={t('appointments')}
+                                onClick={handleDrawerLinkClick}
+                            />
+
+                            <DrawerLink
+                                href="/admin/users"
+                                label={t('users')}
+                                onClick={handleDrawerLinkClick}
+                            />
+
+                            <DrawerLink
+                                href="/admin/notifications"
+                                label={t('user_notifications')}
+                                onClick={handleDrawerLinkClick}
+                            />
+                        </>
+                    )}
 
                             {!!auth.user && (
                                 <button
