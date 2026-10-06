@@ -172,7 +172,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 });
 
 Route::middleware(['owner'])->prefix('owner')->group(function () {
-
+    Route::get('/new-company-appointments', [AppointmentController::class, 'ShowNewCompanyAppointment'])->name('owner.new-appointments');
     Route::post('/companies', [CompanyController::class, 'store']);
     Route::delete('/company/{company}', [CompanyController::class, 'destroy']);
     Route::post('/appointment/{id}/status', [AppointmentController::class, 'updateStatus']);
@@ -240,7 +240,17 @@ Route::middleware(['owner'])->prefix('owner')->group(function () {
 
 Route::fallback(function () {
     if (Auth::check()) {
-        return redirect('/company/home');
+        $user = Auth::user();
+
+        if ($user->owner) {
+            return redirect()->route('owner.new-appointments');
+        }
+
+        if ($user->company_id) {
+            return redirect('/employee/appointments');
+        }
+
+        return redirect('/company/favorites');
     }
 
     return Inertia::render('Errors/NotFound');
