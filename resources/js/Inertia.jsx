@@ -2,6 +2,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import Layout from './Components/Layout';
 import './i18n.jsx';
+import GlobalLoader from './Components/GlobalLoader.jsx';
 import { ToastProvider } from './Components/Toast/ToastProvider.jsx'; // ✅ Correct pad
 
 createInertiaApp({
@@ -17,6 +18,7 @@ createInertiaApp({
     setup({ el, App, props }) {
         createRoot(el).render(
             <ToastProvider>
+                <GlobalLoader />
                 <App {...props} />
             </ToastProvider>
         );
